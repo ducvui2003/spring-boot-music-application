@@ -64,6 +64,15 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:8.12.56")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
+    implementation("org.bytedeco:javacv-platform:1.5.10")
+
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
+    implementation("com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0")
+
+    implementation("com.cloudinary:cloudinary-http44:1.39.0")
+
+
 }
 dependencyManagement {
     imports {
