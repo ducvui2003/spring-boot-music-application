@@ -82,6 +82,8 @@ app:
     - /auth/**
     - /auth/google
     - /upload
+    - /graphql
+    - /graphiql
   cookie:
     key:
       refreshToken: refresh_token

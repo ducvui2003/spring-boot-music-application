@@ -48,7 +48,6 @@ dependencies {
 
 //    OAuth
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-//    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-client")
     implementation("org.springframework.security:spring-security-oauth2-client")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
@@ -66,9 +65,6 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
     implementation("org.bytedeco:javacv-platform:1.5.10")
-
-    implementation("org.springframework.boot:spring-boot-starter-graphql")
-    implementation("com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0")
 
     implementation("com.cloudinary:cloudinary-http44:1.39.0")
 
@@ -91,6 +87,7 @@ spotless {
         importOrder("java", "javax", "org", "com", "com.diffplug");
     }
 }
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }

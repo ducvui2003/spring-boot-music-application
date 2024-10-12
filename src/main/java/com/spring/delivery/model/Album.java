@@ -1,9 +1,6 @@
 package com.spring.delivery.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +18,7 @@ public class Album extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "artist_id")
     Artist artist;
-    String cover;
+    @OneToOne
+    Image cover;
     Instant releaseDate;
 }

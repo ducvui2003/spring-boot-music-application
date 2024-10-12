@@ -22,7 +22,8 @@ public class Song extends BaseModel {
     Genre genre;
     Long duration;
     String source;
-    String cover;
+    @OneToOne
+    Image cover;
     @ManyToOne
     Artist artist;
 

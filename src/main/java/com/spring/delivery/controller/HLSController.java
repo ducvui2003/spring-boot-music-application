@@ -1,7 +1,7 @@
-package com.spring.delivery.controller.resource;
+package com.spring.delivery.controller;
 
 import com.spring.delivery.domain.request.HLSCloudinaryRequest;
-import com.spring.delivery.domain.response.HLSCloudinaryResponse;
+import com.spring.delivery.domain.response.ResponseVideoCloudinary;
 import com.spring.delivery.service.cloudinary.CloudinaryService;
 import com.spring.delivery.util.enums.Folder;
 import lombok.AccessLevel;
@@ -20,12 +20,12 @@ public class HLSController {
     CloudinaryService cloudinaryService;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> handleUpload(@RequestParam("file") MultipartFile multipart) throws Exception {
-        cloudinaryService.uploadMp3(HLSCloudinaryRequest.builder()
+    public ResponseEntity<ResponseVideoCloudinary> handleUpload(@RequestParam("name") String name, @RequestParam("file") MultipartFile multipart) throws Exception {
+        ResponseVideoCloudinary response = cloudinaryService.uploadMp3(HLSCloudinaryRequest.builder()
                 .parent(Folder.SONG.getName())
+                .name(name)
                 .mp3(multipart)
                 .build());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(response);
     }
-
 }

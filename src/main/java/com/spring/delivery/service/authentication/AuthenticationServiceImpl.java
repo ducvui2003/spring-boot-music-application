@@ -1,5 +1,6 @@
 package com.spring.delivery.service.authentication;
 
+import com.spring.delivery.domain.request.RequestRegister;
 import com.spring.delivery.model.JwtPayload;
 import com.spring.delivery.model.Permission;
 import com.spring.delivery.model.Role;
@@ -43,19 +44,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     RoleRepository roleRepository;
 
     @Override
-    public User register(String idToken, User user) {
-        FirebaseToken decodedToken;
-        try {
-            decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-            log.info("decoded token {}", decodedToken);
-        } catch (FirebaseAuthException e) {
-            throw new AppException(AppErrorCode.INVALID_TOKEN);
-        }
-
-        checkBeforeRegister(user.getEmail(), user.getPhoneNumber());
-
+    public User register(RequestRegister request) {
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            throw new AppException(AppErrorCode.EMAIL_EXISTED);
+        });
+        User user = userMapper.toUser(request);
         user.setVerified(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setAuthType(AuthType.USERNAME_PASSWORD);
+        user.setRole(roleRepository.findByName(RoleEnum.USER));
         return userRepository.save(user);
     }
 
@@ -97,43 +94,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public boolean isVerify(String email) {
         return userRepository.existsByEmailAndVerifiedIsTrue(email);
-    }
-
-    @Override
-    public boolean checkBeforeRegister(String email, String phoneNumber) {
-        if (userRepository.existsByEmail(email))
-            throw new AppException(AppErrorCode.EMAIL_EXISTED);
-        if (userRepository.existsByPhoneNumber(phoneNumber))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_EXISTED);
-
-        return true;
-    }
-
-    @Override
-    public User getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).orElse(null);
-    }
-
-    @Override
-    public ResponseAuthentication loginByPhoneNumber() {
-//        Không cần case TH user không tồn tại vì đã được xử lý ở phần loadUserDetail
-        String phoneNumber = SecurityUtil.getCurrentUserLogin().get();
-        log.info("loginByPhoneNumber {}", phoneNumber);
-
-        User user = this.getUserByPhoneNumber(phoneNumber);
-
-        ResponseAuthentication.UserDTO userDTO = userMapper.toUserDTO(user);
-        JwtPayload jwtPayload = getJwtPayload(user);
-
-        String accessToken = securityUtil.createAccessToken(jwtPayload);
-
-        String refreshToken = securityUtil.createRefreshToken(jwtPayload);
-
-        return ResponseAuthentication.builder()
-                .user(userDTO)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
     }
 
     @Override

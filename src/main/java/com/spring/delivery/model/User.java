@@ -26,9 +26,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    String phoneNumber;
-
     String email;
 
     @JsonIgnore

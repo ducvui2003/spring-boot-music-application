@@ -46,36 +46,21 @@ public class AuthenticationController {
     @ApiMessage("Login")
     @PostMapping("/login")
     public ResponseEntity<ResponseAuthentication> login(@Valid @RequestBody RequestLogin userLogin) {
-        if (!MyPhoneNumberUtil.isPhoneNumberValid(userLogin.region(), userLogin.phoneNumber()))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_INVALID);
-        String phoneNumber = MyPhoneNumberUtil.formatPhoneNumber(userLogin.region(), userLogin.phoneNumber());
         // Nạp input gồm username và password vào Security
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phoneNumber, userLogin.password());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userLogin.email(), userLogin.password());
         // Sử dụng method loadUserDetail đã implement để lấy ra user trong db
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // Get user đã đăng nhập thành công vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        ResponseAuthentication response = authenticationService.loginByPhoneNumber();
+        ResponseAuthentication response = authenticationService.loginByEmail();
         ResponseCookie cookie = securityUtil.updateRefreshToken(response.getRefreshToken());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
-    }
-
-    @ApiMessage("check info before Register")
-    @PostMapping("/check-before-register")
-    public ResponseEntity<Void> checkBeforeRegister(@Valid @RequestBody RequestCheckBeforeRegister requestCheckBeforeRegister) {
-        if (!MyPhoneNumberUtil.isPhoneNumberValid(requestCheckBeforeRegister.region(), requestCheckBeforeRegister.phoneNumber()))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_INVALID);
-        authenticationService.checkBeforeRegister(MyPhoneNumberUtil.formatPhoneNumber(requestCheckBeforeRegister.region(), requestCheckBeforeRegister.phoneNumber()), requestCheckBeforeRegister.phoneNumber());
-        return ResponseEntity.ok().build();
     }
 
     @ApiMessage("Register")
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody RequestRegister userRegister) {
-        if (!MyPhoneNumberUtil.isPhoneNumberValid(userRegister.getRegion(), userRegister.getPhoneNumber()))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_INVALID);
-        userRegister.setPhoneNumber(MyPhoneNumberUtil.formatPhoneNumber(userRegister.getRegion(), userRegister.getPhoneNumber()));
-        User user = authenticationService.register(userRegister.getIdToken(), userMapper.toUser(userRegister));
+        User user = authenticationService.register(userRegister);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 

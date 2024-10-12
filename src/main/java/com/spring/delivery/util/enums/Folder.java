@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public enum Folder {
-    SONG("songs");
+    SONG("songs"),
+
+    GENRE("genre");
 
     private String name;
 
