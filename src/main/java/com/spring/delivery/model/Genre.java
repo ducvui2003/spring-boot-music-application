@@ -20,7 +20,7 @@ public class Genre extends BaseModel {
     String name;
     String description;
     @OneToOne
-    Image cover;
+    Resource cover;
 
     @OneToMany(mappedBy = "genre")
     Set<Song> songs;

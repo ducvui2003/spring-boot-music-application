@@ -21,9 +21,10 @@ public class Song extends BaseModel {
     @JoinColumn(name = "genre_id")
     Genre genre;
     Long duration;
-    String source;
     @OneToOne
-    Image cover;
+    Resource source;
+    @OneToOne
+    Resource cover;
     @ManyToOne
     Artist artist;
 

@@ -8,6 +8,7 @@ package com.spring.delivery.controller;
 
 import com.spring.delivery.domain.ApiPaging;
 import com.spring.delivery.domain.ApiResponse;
+import com.spring.delivery.domain.request.RequestGenreCreated;
 import com.spring.delivery.domain.response.ResponseGenre;
 import com.spring.delivery.service.business.genre.GenreService;
 import lombok.AccessLevel;
@@ -18,11 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -40,5 +39,16 @@ public class GenreController {
         return ResponseEntity.ok(ApiResponse.<ApiPaging<ResponseGenre>>builder()
                 .data(genreService.getGenres(pageable))
                 .build());
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<?>> createGenre(@RequestBody RequestGenreCreated request) {
+        genreService.createGenre(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.builder()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .message("Genre created successfully")
+                        .build()
+        );
     }
 }

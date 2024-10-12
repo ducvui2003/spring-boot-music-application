@@ -19,6 +19,6 @@ public class Album extends BaseModel {
     @JoinColumn(name = "artist_id")
     Artist artist;
     @OneToOne
-    Image cover;
+    Resource cover;
     Instant releaseDate;
 }

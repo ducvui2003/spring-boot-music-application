@@ -1,20 +1,22 @@
+/**
+ * Class: ResourceResponse
+ *
+ * @author ducvui2003
+ * @created 13/10/24
+ */
 package com.spring.delivery.domain.response;
 
+import com.spring.delivery.util.enums.Tag;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
-
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseVideoCloudinary {
+public class ResourceResponse {
+    Long id;
     String url;
-    String secureUrl;
-    String secureUrlM3u8;
-    String publicId;
-    String assetId;
-    Instant createdAt;
+    Tag tag;
 }

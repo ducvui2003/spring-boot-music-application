@@ -7,10 +7,15 @@
 package com.spring.delivery.service.business.genre;
 
 import com.spring.delivery.domain.ApiPaging;
+import com.spring.delivery.domain.request.RequestGenreCreated;
 import com.spring.delivery.domain.response.ResponseGenre;
 import com.spring.delivery.mapper.GenreMapper;
 import com.spring.delivery.model.Genre;
+import com.spring.delivery.model.Resource;
+import com.spring.delivery.model.Song;
 import com.spring.delivery.repository.GenreRepository;
+import com.spring.delivery.repository.ResourceRepository;
+import com.spring.delivery.repository.SongRepository;
 import com.spring.delivery.util.exception.AppException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -28,6 +35,8 @@ import java.util.List;
 public class GenreServiceImpl implements GenreService {
     GenreRepository genreRepository;
     GenreMapper genreMapper = GenreMapper.INSTANCE;
+    SongRepository songRepository;
+    ResourceRepository resourceRepository;
 
     @Override
     public ApiPaging<ResponseGenre> getGenres(Pageable pageable) {
@@ -47,5 +56,18 @@ public class GenreServiceImpl implements GenreService {
                 .totalItems(page.getTotalElements())
                 .totalPages(page.getTotalPages())
                 .build();
+    }
+
+    @Override
+    public void createGenre(RequestGenreCreated request) {
+        if (genreRepository.existsByName(request.name())) {
+            throw new AppException("Genre already exists");
+        }
+        Set<Song> songs = songRepository.findAllByIdIn(request.songId());
+        Optional<Resource> image = resourceRepository.findById(request.coverId());
+        Genre genre = genreMapper.toGenre(request);
+        genre.setSongs(songs);
+        image.ifPresent(genre::setCover);
+        genreRepository.save(genre);
     }
 }

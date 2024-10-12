@@ -1,9 +1,12 @@
 package com.spring.delivery.service.cloudinary;
 
 
-import com.spring.delivery.domain.request.HLSCloudinaryRequest;
-import com.spring.delivery.domain.response.ResponseVideoCloudinary;
+import com.spring.delivery.domain.request.RequestUploadResource;
+import com.spring.delivery.domain.response.ResponseCloudinaryUpload;
 
 public interface CloudinaryService {
-    public ResponseVideoCloudinary uploadMp3(HLSCloudinaryRequest hlsCloudinaryResponse) throws Exception;
+    public ResponseCloudinaryUpload uploadAudio(RequestUploadResource hlsCloudinaryResponse) throws Exception;
+
+    public ResponseCloudinaryUpload uploadImage(RequestUploadResource hlsCloudinaryResponse) throws Exception;
+
 }

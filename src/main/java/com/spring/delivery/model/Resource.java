@@ -6,7 +6,7 @@
  */
 package com.spring.delivery.model;
 
-import com.spring.delivery.util.enums.ImageTag;
+import com.spring.delivery.util.enums.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,11 +19,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class Image {
+public class Resource {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     Long id;
     String url;
     @Enumerated(EnumType.STRING)
-    ImageTag tag;
+    @Column(length = 20)
+    Tag tag;
 }

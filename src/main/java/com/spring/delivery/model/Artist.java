@@ -20,7 +20,7 @@ public class Artist extends BaseModel {
     String name;
     String bio;
     @OneToOne
-    Image avatar;
+    Resource avatar;
 
     @OneToMany(mappedBy = "artist")
     Set<Song> songs;
