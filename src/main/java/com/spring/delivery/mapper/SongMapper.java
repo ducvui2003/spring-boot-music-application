@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface SongMapper {
-    static final SongMapper INSTANCE = Mappers.getMapper(SongMapper.class);
+    SongMapper INSTANCE = Mappers.getMapper(SongMapper.class);
 
     @Mapping(target = "artist", ignore = true)
     @Mapping(target = "genre", ignore = true)

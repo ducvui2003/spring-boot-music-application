@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
-public class CloudinaryImpl implements CloudinaryService {
+public class CloudinaryServiceImpl implements CloudinaryService {
     Cloudinary cloudinary;
     @Value("${app.service.cloudinary.folder}")
     @NonFinal
@@ -71,5 +71,15 @@ public class CloudinaryImpl implements CloudinaryService {
                 .url(url)
                 .createdAt(createdAt)
                 .build();
+    }
+
+    @Override
+    public String generateHLS(String publicId) {
+        return cloudinary.url().resourceType("video")
+                .format("m3u8")
+                .type("upload")
+                .transformation(new Transformation().audioCodec("aac"))
+                .publicId(publicId)
+                .generate();
     }
 }

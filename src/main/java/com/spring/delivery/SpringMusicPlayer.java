@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableFeignClients
 @EnableAsync
 @EnableScheduling
-public class IdentityServiceApplication {
+public class SpringMusicPlayer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IdentityServiceApplication.class, args);
+		SpringApplication.run(SpringMusicPlayer.class, args);
 	}
 }

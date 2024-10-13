@@ -27,4 +27,5 @@ public class Resource {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     Tag tag;
+    String publicId;
 }

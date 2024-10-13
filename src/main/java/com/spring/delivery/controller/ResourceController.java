@@ -3,24 +3,19 @@ package com.spring.delivery.controller;
 import com.spring.delivery.domain.request.RequestUploadResource;
 import com.spring.delivery.domain.response.ResourceResponse;
 import com.spring.delivery.service.business.resource.ResourceService;
-import com.spring.delivery.service.cloudinary.CloudinaryService;
 import com.spring.delivery.util.enums.Tag;
 import com.spring.delivery.util.validation.ValidationStrategy;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/upload")
+@RequestMapping("/api/v1/resource")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ResourceController {
     ResourceService resourceService;
@@ -29,7 +24,16 @@ public class ResourceController {
     @Qualifier("validationImage")
     ValidationStrategy validationImage;
 
-    @PostMapping("/audio")
+
+    @GetMapping("/audio/{id}")
+    public ResponseEntity<ResourceResponse> getAudio(@PathVariable("id") Long id) {
+        ResourceResponse response = resourceService.getResource(id);
+        if (response == null)
+            return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/upload/audio")
     public ResponseEntity<ResourceResponse> createAudio(
             @RequestParam("name") String name,
             @RequestParam("file") MultipartFile multipart) {
@@ -40,11 +44,11 @@ public class ResourceController {
                 .multipartFile(multipart)
                 .build(), validationAudio);
         if (response == null)
-            return ResponseEntity.badRequest().build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/image")
+    @PostMapping("/upload/image")
     public ResponseEntity<ResourceResponse> handleUploadImage(
             @RequestParam("name") String name,
             @RequestParam("file") MultipartFile multipart,

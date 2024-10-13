@@ -39,11 +39,17 @@ public class ResourceServiceImpl implements ResourceService {
         Resource savedResource = resourceRepository.save(Resource.builder()
                 .url(response.getUrl())
                 .tag(resource.tag())
+                .publicId(response.getPublicId())
                 .build());
         resourceRepository.save(savedResource);
+//        Image
+        String url = savedResource.getUrl();
+        if (resource.tag().equals(Tag.AUDIO))
+//        Audio
+            url = cloudinaryService.generateHLS(savedResource.getPublicId());
         return ResourceResponse.builder()
                 .id(savedResource.getId())
-                .url(savedResource.getUrl())
+                .url(url)
                 .tag(savedResource.getTag())
                 .build();
     }
@@ -54,5 +60,18 @@ public class ResourceServiceImpl implements ResourceService {
             return createResource(resource);
         }
         return null;
+    }
+
+    @Override
+    public ResourceResponse getResource(Long id) {
+        Resource resource = resourceRepository.findById(id).orElse(null);
+        if (resource == null)
+            return null;
+        String url = cloudinaryService.generateHLS(resource.getPublicId());
+        return ResourceResponse.builder()
+                .id(resource.getId())
+                .url(url)
+                .tag(resource.getTag())
+                .build();
     }
 }

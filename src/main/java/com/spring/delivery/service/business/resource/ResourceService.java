@@ -9,4 +9,5 @@ public interface ResourceService {
 
     ResourceResponse createResource(RequestUploadResource resource, ValidationStrategy validationStrategy);
 
+    ResourceResponse getResource(Long id);
 }
