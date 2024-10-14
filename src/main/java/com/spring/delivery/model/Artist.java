@@ -2,6 +2,7 @@ package com.spring.delivery.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +19,8 @@ import java.util.Set;
 public class Artist extends BaseModel {
     String name;
     String bio;
-    String avatar;
+    @OneToOne
+    Resource avatar;
 
     @OneToMany(mappedBy = "artist")
     Set<Song> songs;

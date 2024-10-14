@@ -24,14 +24,14 @@ public class UserDetailsCustom implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = authenticationService.getUserByPhoneNumber(username);
+        User user = authenticationService.getUserByEmail(username);
         if (user == null) throw new AppException(AppErrorCode.USER_NOT_FOUND);
 
         Collection<GrantedAuthority> authorities = user.getRole().getPermissions().stream().map(permission ->
                 new SimpleGrantedAuthority(permission.getName())).collect(Collectors.toList());
 
         return new org.springframework.security.core.userdetails.User(
-                user.getPhoneNumber(),
+                user.getEmail(),
                 user.getPassword(),
                 authorities);
     }
