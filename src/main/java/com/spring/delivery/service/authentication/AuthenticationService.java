@@ -6,17 +6,19 @@ import com.spring.delivery.model.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public interface AuthenticationService {
-    User register(RequestRegister request);
+    void register(RequestRegister request);
+
+    ResponseAuthentication login();
 
     ResponseAuthentication getAccessToken(String email);
 
     void logout(String email, String accessToken, String refreshToken);
 
-    User getUserByEmail(String email);
-
     boolean isVerify(String email);
-    
-    ResponseAuthentication loginByEmail();
 
     void createUserOAuth2(OAuth2User oAuth2User);
+
+    User getUserByEmail(String email);
+
+    void verify(String email, String otp);
 }

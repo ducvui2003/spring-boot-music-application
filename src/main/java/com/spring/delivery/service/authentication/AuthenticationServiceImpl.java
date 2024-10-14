@@ -34,9 +34,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     UserMapper userMapper = UserMapper.INSTANCE;
     SecurityUtil securityUtil;
     RoleRepository roleRepository;
+    VerifyService verifyService;
 
     @Override
-    public User register(RequestRegister request) {
+    public void register(RequestRegister request) {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
             throw new AppException(AppErrorCode.EMAIL_EXISTED);
         });
@@ -45,7 +46,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAuthType(AuthType.USERNAME_PASSWORD);
         user.setRole(roleRepository.findByName(RoleEnum.USER));
-        return userRepository.save(user);
+        verifyService.sendOtp(user.getEmail());
+        userRepository.save(user);
     }
 
     @Override
@@ -89,7 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public ResponseAuthentication loginByEmail() {
+    public ResponseAuthentication login() {
 //        Không cần case TH user không tồn tại vì đã được nạp vào context
         String email = SecurityUtil.getCurrentUserLogin().get();
         log.info("email {}", email);
@@ -134,5 +136,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .permissions(user.getRole().getPermissions().stream().map(Permission::getName).toList())
                 .timeExpiredPlus(1)
                 .build();
+    }
+
+    @Override
+    public void verify(String email, String otp) {
+        verifyService.verifyOtp(email, otp);
     }
 }

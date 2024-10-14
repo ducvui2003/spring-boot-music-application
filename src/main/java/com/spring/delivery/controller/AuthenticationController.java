@@ -1,14 +1,13 @@
 package com.spring.delivery.controller;
 
 import com.spring.delivery.config.properties.CookieProperties;
-import com.spring.delivery.domain.request.RequestCheckBeforeRegister;
 import com.spring.delivery.domain.request.RequestLogin;
 import com.spring.delivery.domain.request.RequestRegister;
+import com.spring.delivery.domain.request.RequestVerify;
 import com.spring.delivery.domain.response.ResponseAuthentication;
 import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.User;
 import com.spring.delivery.service.authentication.AuthenticationService;
-import com.spring.delivery.util.MyPhoneNumberUtil;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.anotation.ApiMessage;
 import com.spring.delivery.util.exception.AppErrorCode;
@@ -52,16 +51,16 @@ public class AuthenticationController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // Get user đã đăng nhập thành công vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        ResponseAuthentication response = authenticationService.loginByEmail();
+        ResponseAuthentication response = authenticationService.login();
         ResponseCookie cookie = securityUtil.updateRefreshToken(response.getRefreshToken());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
     }
 
     @ApiMessage("Register")
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody RequestRegister userRegister) {
-        User user = authenticationService.register(userRegister);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<Void> register(@Valid @RequestBody RequestRegister userRegister) {
+        authenticationService.register(userRegister);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     // Sử dụng để client lấy lại data người dùng khi F5 trang
@@ -116,4 +115,9 @@ public class AuthenticationController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(null);
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<Void> verify(@Valid @RequestBody RequestVerify request) {
+        authenticationService.verify(request.email(), request.otp());
+        return ResponseEntity.ok().build();
+    }
 }
