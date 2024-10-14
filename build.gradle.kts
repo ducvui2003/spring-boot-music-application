@@ -68,7 +68,7 @@ dependencies {
 
     implementation("com.cloudinary:cloudinary-http44:1.39.0")
 
-
+    implementation("com.brevo:brevo:1.0.0")
 }
 dependencyManagement {
     imports {

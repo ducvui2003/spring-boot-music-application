@@ -1,6 +1,5 @@
 package com.spring.delivery.service.authentication;
 
-@Deprecated
 public interface VerifyService {
     boolean userIsVerify(String email);
 
