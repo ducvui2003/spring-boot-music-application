@@ -75,6 +75,8 @@ app:
     - /api/v1/auth/login-google-web
     - /api/v1/auth/password/forgot
     - /api/v1/auth/password/reset
+    - /api/v1/resource/signature-key
+    - /api/v1/resource/create
     - /swagger-ui.html
     - /v3/api-docs
     - /v3/api-docs/**
