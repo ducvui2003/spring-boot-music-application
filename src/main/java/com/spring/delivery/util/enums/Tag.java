@@ -7,9 +7,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public enum Folder {
-    SONG("songs");
-
+public enum Tag {
+    USER("image/user"),
+    SONG("image/song"),
+    GENRE("image/genre"),
+    ARTIST("image/artist"),
+    ALBUM("image/album"),
+    AUDIO("audio"),
+    ;
     private String name;
-
 }

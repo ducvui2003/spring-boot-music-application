@@ -45,7 +45,7 @@ public class OAuth2GoogleController {
         OAuth2User authenticationToken = new CustomOAuth2User(profileUserGoogle);
         authenticationService.createUserOAuth2(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authenticationToken, null, Collections.emptyList()));
-        ResponseAuthentication response = authenticationService.loginByEmail();
+        ResponseAuthentication response = authenticationService.login();
         ResponseCookie cookie = securityUtil.updateRefreshToken(response.getRefreshToken());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
     }

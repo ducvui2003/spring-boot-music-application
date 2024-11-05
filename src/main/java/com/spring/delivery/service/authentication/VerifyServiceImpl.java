@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 @Service
-@Deprecated
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VerifyServiceImpl implements VerifyService {

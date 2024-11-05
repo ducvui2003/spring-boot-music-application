@@ -2,7 +2,6 @@ package com.spring.delivery.domain.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 
@@ -11,11 +10,10 @@ import java.time.Instant;
 @AllArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HLSCloudinaryResponse {
-    String urlOriginal;
-    String secureUrlOriginal;
-    String urlM3u4;
-    String secureUrlM3u4;
+public class ResponseCloudinaryUpload {
+    String url;
+    String secureUrl;
     String publicId;
+    String assetId;
     Instant createdAt;
 }

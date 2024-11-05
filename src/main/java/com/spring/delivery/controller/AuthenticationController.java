@@ -1,14 +1,13 @@
 package com.spring.delivery.controller;
 
 import com.spring.delivery.config.properties.CookieProperties;
-import com.spring.delivery.domain.request.RequestCheckBeforeRegister;
 import com.spring.delivery.domain.request.RequestLogin;
 import com.spring.delivery.domain.request.RequestRegister;
+import com.spring.delivery.domain.request.RequestVerify;
 import com.spring.delivery.domain.response.ResponseAuthentication;
 import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.User;
 import com.spring.delivery.service.authentication.AuthenticationService;
-import com.spring.delivery.util.MyPhoneNumberUtil;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.anotation.ApiMessage;
 import com.spring.delivery.util.exception.AppErrorCode;
@@ -46,37 +45,22 @@ public class AuthenticationController {
     @ApiMessage("Login")
     @PostMapping("/login")
     public ResponseEntity<ResponseAuthentication> login(@Valid @RequestBody RequestLogin userLogin) {
-        if (!MyPhoneNumberUtil.isPhoneNumberValid(userLogin.region(), userLogin.phoneNumber()))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_INVALID);
-        String phoneNumber = MyPhoneNumberUtil.formatPhoneNumber(userLogin.region(), userLogin.phoneNumber());
         // Nạp input gồm username và password vào Security
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phoneNumber, userLogin.password());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userLogin.email(), userLogin.password());
         // Sử dụng method loadUserDetail đã implement để lấy ra user trong db
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // Get user đã đăng nhập thành công vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        ResponseAuthentication response = authenticationService.loginByPhoneNumber();
+        ResponseAuthentication response = authenticationService.login();
         ResponseCookie cookie = securityUtil.updateRefreshToken(response.getRefreshToken());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
     }
 
-    @ApiMessage("check info before Register")
-    @PostMapping("/check-before-register")
-    public ResponseEntity<Void> checkBeforeRegister(@Valid @RequestBody RequestCheckBeforeRegister requestCheckBeforeRegister) {
-        if (!MyPhoneNumberUtil.isPhoneNumberValid(requestCheckBeforeRegister.region(), requestCheckBeforeRegister.phoneNumber()))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_INVALID);
-        authenticationService.checkBeforeRegister(MyPhoneNumberUtil.formatPhoneNumber(requestCheckBeforeRegister.region(), requestCheckBeforeRegister.phoneNumber()), requestCheckBeforeRegister.phoneNumber());
-        return ResponseEntity.ok().build();
-    }
-
     @ApiMessage("Register")
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody RequestRegister userRegister) {
-        if (!MyPhoneNumberUtil.isPhoneNumberValid(userRegister.getRegion(), userRegister.getPhoneNumber()))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_INVALID);
-        userRegister.setPhoneNumber(MyPhoneNumberUtil.formatPhoneNumber(userRegister.getRegion(), userRegister.getPhoneNumber()));
-        User user = authenticationService.register(userRegister.getIdToken(), userMapper.toUser(userRegister));
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<Void> register(@Valid @RequestBody RequestRegister userRegister) {
+        authenticationService.register(userRegister);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     // Sử dụng để client lấy lại data người dùng khi F5 trang
@@ -131,4 +115,9 @@ public class AuthenticationController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(null);
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<Void> verify(@Valid @RequestBody RequestVerify request) {
+        authenticationService.verify(request.email(), request.otp());
+        return ResponseEntity.ok().build();
+    }
 }

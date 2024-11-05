@@ -16,7 +16,8 @@ import java.util.Set;
 public class Playlist extends BaseModel {
     String name;
     String description;
-    String cover;
+    @OneToOne
+    Resource cover;
     boolean isPublic;
     @ManyToOne
     @JoinColumn(name = "user_id")
