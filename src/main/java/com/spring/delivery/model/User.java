@@ -1,6 +1,7 @@
 package com.spring.delivery.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +36,9 @@ public class User {
     String password;
 
     String fullName;
+
+    boolean sex;
+    Date birthDay;
 
     boolean verified;
 
