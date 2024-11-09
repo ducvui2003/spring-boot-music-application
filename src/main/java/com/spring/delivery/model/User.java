@@ -1,6 +1,7 @@
 package com.spring.delivery.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import com.spring.delivery.util.enums.AuthType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "users")
@@ -52,4 +54,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<ListeningHistory> listeningHistories;
+
+    @ColumnDefault("false")
+    boolean isPremium;
 }

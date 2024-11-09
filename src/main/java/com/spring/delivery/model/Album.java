@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +22,6 @@ public class Album extends BaseModel {
     @OneToOne
     Resource cover;
     Instant releaseDate;
+    @OneToMany(mappedBy = "album")
+    List<Song> songs;
 }
