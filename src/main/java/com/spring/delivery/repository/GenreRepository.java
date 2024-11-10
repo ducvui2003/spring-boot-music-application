@@ -11,4 +11,5 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
     Page<Genre> findAll(Pageable pageable);
 
     boolean existsByName(String name);
+
 }

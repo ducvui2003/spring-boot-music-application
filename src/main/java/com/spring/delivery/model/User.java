@@ -1,19 +1,17 @@
 package com.spring.delivery.model;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.List;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import com.spring.delivery.util.enums.converter.AuthTypeConverter;
 import com.spring.delivery.util.enums.AuthType;
+import com.spring.delivery.util.enums.converter.AuthTypeConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.sql.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +30,11 @@ public class User {
 
     @JsonIgnore
     String password;
-
+    String phoneNumber;
     String fullName;
+
+    boolean sex;
+    Date birthDay;
 
     boolean verified;
 

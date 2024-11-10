@@ -40,4 +40,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Transactional
     @Query("DELETE FROM User u WHERE u.id = :userId AND :songId MEMBER OF u.songs")
     void removeSongFromFavoriteIfExists(@Param("userId") long userId, @Param("songId") Long songId);
+
+    List<Song> findAll();
 }
