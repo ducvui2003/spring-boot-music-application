@@ -1,15 +1,20 @@
 package com.spring.delivery.domain.request;
 
-import java.time.Instant;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record RequestCreateSong(
+        @NotBlank
         String title,
+        @NotBlank
         String artist,
         String album,
+        @NotBlank
         String genre,
-        Long resourceId,
-        Long coverId,
-        Instant createdAt,
-        Instant updatedAt
-        ) {
+        @NotNull
+        Long sourceId,
+        @NotNull
+        Long coverId
+) {
 }

@@ -2,18 +2,13 @@ package com.spring.delivery.service.business.song;
 
 import com.spring.delivery.domain.ApiPaging;
 import com.spring.delivery.domain.request.RequestCreateSong;
+import com.spring.delivery.domain.request.RequestUpdateSong;
 import com.spring.delivery.domain.response.ResponseAuthentication;
-import com.spring.delivery.domain.response.ResponseCreateSong;
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.mapper.SongMapper;
-import com.spring.delivery.model.Album;
-import com.spring.delivery.model.Artist;
-import com.spring.delivery.model.Song;
-import com.spring.delivery.repository.AlbumRepository;
-import com.spring.delivery.repository.ArtistRepository;
-import com.spring.delivery.repository.SongRepository;
-import com.spring.delivery.repository.UserRepository;
+import com.spring.delivery.model.*;
+import com.spring.delivery.repository.*;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.exception.AppErrorCode;
 import com.spring.delivery.util.exception.AppException;
@@ -38,6 +33,8 @@ public class SongServiceImpl implements SongService {
     UserRepository userRepository;
     ArtistRepository artistRepository;
     AlbumRepository albumRepository;
+    ResourceRepository resourceRepository;
+    GenreRepository genreRepository;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
@@ -87,14 +84,32 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public ResponseCreateSong createSong(RequestCreateSong request) {
-        Song song = new Song();
+    public ResponseSong createSong(RequestCreateSong request) {
+        Song song = songMapper.toSong(request);
         Artist artist = artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found"));
         song.setArtist(artist);
-        if (artist != null) {
+
+        if (request.album() != null) {
             Album album = albumRepository.findByName(request.album()).orElseThrow(() -> new AppException("Album not found"));
             artist.setAlbums(Set.of(album));
         }
-        return songMapper.toCreateSongResponse(songRepository.save(song));
+        Genre genre = genreRepository.findByName(request.genre()).orElseThrow(() -> new AppException("Genre not found"));
+        song.setGenre(genre);
+        Resource cover = resourceRepository.findById(request.coverId()).orElseThrow(() -> new AppException("Resource not found"));
+        song.setCover(cover);
+        Resource source = resourceRepository.findById(request.sourceId()).orElseThrow(() -> new AppException("Resource not found"));
+        song.setSource(source);
+        return songMapper.toSongResponse(songRepository.save(song));
+    }
+
+    @Override
+    public ResponseSong updateSong(Long id, RequestUpdateSong request) {
+        Song song = songRepository.findById(id).orElseThrow(() -> new AppException("Song not found"));
+        song.setTitle(request.title());
+        song.setAlbum(albumRepository.findByName(request.album()).orElseThrow(() -> new AppException("Album not found")));
+        song.setArtist(artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found")));
+        song.setGenre(genreRepository.findByName(request.genre()).orElseThrow(() -> new AppException("Genre not found")));
+        song.setCover(resourceRepository.findById(request.coverId()).orElseThrow(() -> new AppException("Resource not found")));
+        return songMapper.toSongResponse(songRepository.save(song));
     }
 }

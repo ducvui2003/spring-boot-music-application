@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
         user.setPremium(true);
         userRepository.save(user);
     }
+
     @Override
     public ResponseUpdateInformation changeInformation(RequestUpdateInformation updateInformation) {
         String email = SecurityUtil.getCurrentUserLogin().get();
