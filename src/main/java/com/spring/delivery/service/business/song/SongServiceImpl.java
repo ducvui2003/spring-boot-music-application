@@ -1,11 +1,17 @@
 package com.spring.delivery.service.business.song;
 
 import com.spring.delivery.domain.ApiPaging;
+import com.spring.delivery.domain.request.RequestCreateSong;
 import com.spring.delivery.domain.response.ResponseAuthentication;
+import com.spring.delivery.domain.response.ResponseCreateSong;
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.mapper.SongMapper;
+import com.spring.delivery.model.Album;
+import com.spring.delivery.model.Artist;
 import com.spring.delivery.model.Song;
+import com.spring.delivery.repository.AlbumRepository;
+import com.spring.delivery.repository.ArtistRepository;
 import com.spring.delivery.repository.SongRepository;
 import com.spring.delivery.repository.UserRepository;
 import com.spring.delivery.util.SecurityUtil;
@@ -20,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +36,8 @@ public class SongServiceImpl implements SongService {
     SongMapper songMapper;
     SecurityUtil securityUtil;
     UserRepository userRepository;
+    ArtistRepository artistRepository;
+    AlbumRepository albumRepository;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
@@ -75,5 +84,17 @@ public class SongServiceImpl implements SongService {
             throw new AppException(AppErrorCode.USER_NOT_FOUND);
         }
         this.songRepository.removeSongFromFavoriteIfExists(userDTO.id(), id);
+    }
+
+    @Override
+    public ResponseCreateSong createSong(RequestCreateSong request) {
+        Song song = new Song();
+        Artist artist = artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found"));
+        song.setArtist(artist);
+        if (artist != null) {
+            Album album = albumRepository.findByName(request.album()).orElseThrow(() -> new AppException("Album not found"));
+            artist.setAlbums(Set.of(album));
+        }
+        return songMapper.toCreateSongResponse(songRepository.save(song));
     }
 }

@@ -1,5 +1,6 @@
 package com.spring.delivery.mapper;
 
+import com.spring.delivery.domain.response.ResponseCreateSong;
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.model.Song;
@@ -20,4 +21,12 @@ public interface SongMapper {
     @Mapping(target = "thumbnail", source = "cover.url")
     @Mapping(target = "title", source = "title")
     ResponseSongCard toSongCardResponse(Song song);
+
+    @Mapping(target = "title", source = "title")
+    @Mapping(target = "artist", source = "artist.name")
+    @Mapping(target = "album", source = "album.name")
+    @Mapping(target = "genre", source = "genre.name")
+    @Mapping(target = "thumbnail", source = "cover.url")
+    @Mapping(target = "url", source = "source.url")
+    ResponseCreateSong toCreateSongResponse(Song song);
 }

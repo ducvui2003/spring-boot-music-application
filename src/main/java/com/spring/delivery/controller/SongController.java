@@ -1,6 +1,8 @@
 package com.spring.delivery.controller;
 
 import com.spring.delivery.domain.ApiPaging;
+import com.spring.delivery.domain.request.RequestCreateSong;
+import com.spring.delivery.domain.response.ResponseCreateSong;
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.service.business.song.SongService;
@@ -52,6 +54,10 @@ public class SongController {
     public ResponseEntity<Void> unlikeSong(@PathVariable("id") Long id) {
         songService.unlikeSong(id);
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<ResponseCreateSong> createSong(@RequestBody RequestCreateSong request) {
+        return ResponseEntity.ok().body(songService.createSong(request));
     }
 
 }
