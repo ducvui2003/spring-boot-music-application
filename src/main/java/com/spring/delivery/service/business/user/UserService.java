@@ -1,9 +1,9 @@
-package com.spring.delivery.service.changeInformation;
+package com.spring.delivery.service.business.user;
 
 import com.spring.delivery.domain.request.RequestUpdateInformation;
 import com.spring.delivery.domain.response.ResponseUpdateInformation;
-import com.spring.delivery.model.User;
 
-public interface ChangeInformation {
+public interface UserService {
     public ResponseUpdateInformation changeInformation(RequestUpdateInformation updateInformation);
+
 }
