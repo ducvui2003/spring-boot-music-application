@@ -6,7 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 @Getter
@@ -16,7 +18,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Song extends BaseModel {
     String title;
-    String album;
     @ManyToOne
     @JoinColumn(name = "genre_id")
     Genre genre;
@@ -28,6 +29,8 @@ public class Song extends BaseModel {
     @ManyToOne
     Artist artist;
 
+    BigInteger views;
+
     @ManyToMany(mappedBy = "songs")
     Set<Playlist> playlists;
 
@@ -36,4 +39,11 @@ public class Song extends BaseModel {
 
     @OneToMany(mappedBy = "song")
     Set<ListeningHistory> listeningHistories;
+
+    @ColumnDefault("false")
+    boolean isPremium;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    Album album;
 }

@@ -69,12 +69,13 @@ app:
     - /api/v1/auth/check-before-register
     - /api/v1/auth/register
     - /api/v1/auth/account
-    - /api/v1/auth/verify
     - /api/v1/auth/refresh-token
     - /api/v1/auth/login-google-mobile
     - /api/v1/auth/login-google-web
     - /api/v1/auth/password/forgot
     - /api/v1/auth/password/reset
+    - /api/v1/resource/signature-key
+    - /api/v1/resource/create
     - /swagger-ui.html
     - /v3/api-docs
     - /v3/api-docs/**
@@ -83,8 +84,6 @@ app:
     - /auth/**
     - /auth/google
     - /upload
-    - /graphql
-    - /graphiql
   cookie:
     key:
       refreshToken: refresh_token

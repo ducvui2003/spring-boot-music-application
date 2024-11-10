@@ -6,9 +6,8 @@
  */
 package com.spring.delivery.service.business.resource;
 
-import com.spring.delivery.domain.request.RequestUploadResource;
+import com.spring.delivery.domain.request.RequestCreateResource;
 import com.spring.delivery.domain.response.ResourceResponse;
-import com.spring.delivery.domain.response.ResponseCloudinaryUpload;
 import com.spring.delivery.model.Resource;
 import com.spring.delivery.repository.ResourceRepository;
 import com.spring.delivery.service.cloudinary.CloudinaryService;
@@ -16,8 +15,10 @@ import com.spring.delivery.util.enums.Tag;
 import com.spring.delivery.util.validation.ValidationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -26,24 +27,14 @@ public class ResourceServiceImpl implements ResourceService {
     ResourceRepository resourceRepository;
 
     @Override
-    public ResourceResponse createResource(RequestUploadResource resource) {
-        ResponseCloudinaryUpload response = null;
-        try {
-            if (resource.tag().equals(Tag.AUDIO))
-                response = cloudinaryService.uploadAudio(resource);
-            else
-                response = cloudinaryService.uploadImage(resource);
-        } catch (Exception e) {
-            return null;
-        }
+    public ResourceResponse createResource(RequestCreateResource resource) {
+        String url = cloudinaryService.generateUrl(resource.publicId());
         Resource savedResource = resourceRepository.save(Resource.builder()
-                .url(response.getUrl())
+                .url(url)
                 .tag(resource.tag())
-                .publicId(response.getPublicId())
+                .publicId(resource.publicId())
                 .build());
         resourceRepository.save(savedResource);
-//        Image
-        String url = savedResource.getUrl();
         if (resource.tag().equals(Tag.AUDIO))
 //        Audio
             url = cloudinaryService.generateHLS(savedResource.getPublicId());
@@ -54,11 +45,12 @@ public class ResourceServiceImpl implements ResourceService {
                 .build();
     }
 
+    @Deprecated
     @Override
-    public ResourceResponse createResource(RequestUploadResource resource, ValidationStrategy validationStrategy) {
-        if (validationStrategy.isValid(resource.multipartFile())) {
-            return createResource(resource);
-        }
+    public ResourceResponse createResource(RequestCreateResource resource, ValidationStrategy validationStrategy) {
+//        if (validationStrategy.isValid(resource.multipartFile())) {
+//            return createResource(resource);
+//        }
         return null;
     }
 
