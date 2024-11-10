@@ -1,13 +1,15 @@
 package com.spring.delivery.service.cloudinary;
 
 
-import com.spring.delivery.domain.request.RequestUploadResource;
+import com.spring.delivery.domain.request.RequestCreateResource;
 import com.spring.delivery.domain.response.ResponseCloudinaryUpload;
+import com.spring.delivery.domain.response.ResponseSignature;
+import com.spring.delivery.util.enums.Tag;
 
 public interface CloudinaryService {
-    ResponseCloudinaryUpload uploadAudio(RequestUploadResource hlsCloudinaryResponse) throws Exception;
-
-    ResponseCloudinaryUpload uploadImage(RequestUploadResource hlsCloudinaryResponse) throws Exception;
-
     String generateHLS(String publicId);
+
+    String generateUrl(String publicId);
+
+    ResponseSignature getSignature(String publicId, Tag tag);
 }

@@ -62,5 +62,4 @@ public class EmailServiceImpl implements EmailService {
             log.error("Error sending email", e);
         }
     }
-
 }

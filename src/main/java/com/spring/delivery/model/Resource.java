@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Table(name = "images")
+@Table(name = "resources")
 @Entity
 @Getter
 @Setter
