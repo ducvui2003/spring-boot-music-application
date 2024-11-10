@@ -4,5 +4,6 @@ import com.spring.delivery.domain.request.RequestUpdateInformation;
 import com.spring.delivery.domain.response.ResponseUpdateInformation;
 
 public interface UserService {
-    ResponseUpdateInformation changeInformation(RequestUpdateInformation updateInformation);
+    public ResponseUpdateInformation changeInformation(RequestUpdateInformation updateInformation);
+
 }
