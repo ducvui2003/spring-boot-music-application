@@ -1,5 +1,6 @@
 package com.spring.delivery.domain.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,9 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateInformation {
+public class RequestUpdateInformation {
+    @NotBlank
+//    check validate(kiem tra các trường có bị null hay không)
     private String fullName;
     private String phoneNumber;
     private boolean sex;

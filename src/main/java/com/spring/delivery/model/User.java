@@ -31,7 +31,7 @@ public class User {
 
     @JsonIgnore
     String password;
-
+    String phoneNumber;
     String fullName;
 
     boolean sex;

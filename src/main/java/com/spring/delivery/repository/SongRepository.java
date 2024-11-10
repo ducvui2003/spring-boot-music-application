@@ -14,4 +14,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     Page<Song> findAll(Pageable pageable);
 
     Set<Song> findAllByIdIn(List<Long> ids);
+
+    List<Song> findAll();
 }
