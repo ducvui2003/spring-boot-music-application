@@ -28,7 +28,9 @@ public enum AppErrorCode {
     INVALID_TOKEN(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token"),
     PHONE_NUMBER_INVALID(HttpServletResponse.SC_BAD_REQUEST, "Phone number is invalid"),
     ERROR_OAUTH2(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error occurred during OAuth2 authentication"),
-    USER_ALREADY_PREMIUM(HttpServletResponse.SC_BAD_REQUEST, "User has premium");
+    USER_ALREADY_PREMIUM(HttpServletResponse.SC_BAD_REQUEST, "User has premium"),
+    NOT_FOUND(HttpServletResponse.SC_NOT_FOUND, "Not found"),
+    FORBIDDEN(HttpServletResponse.SC_FORBIDDEN, "Forbidden"),;
 
     private int code;
     private String message;

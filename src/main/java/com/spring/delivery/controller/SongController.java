@@ -28,7 +28,7 @@ public class SongController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<ResponseSong> getSong(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseSong> getSongDetail(@PathVariable(name = "id") Long id) {
         ResponseSong song = songService.getSongDetail(id);
         return ResponseEntity.ok(song);
     }
@@ -66,4 +66,5 @@ public class SongController {
     public ResponseEntity<ResponseSong> updateSong(@PathVariable("id") Long id, @Valid @RequestBody RequestUpdateSong request) {
         return ResponseEntity.ok().body(songService.updateSong(id, request));
     }
+
 }

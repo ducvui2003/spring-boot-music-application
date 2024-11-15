@@ -24,4 +24,6 @@ public class UserController {
     public ResponseEntity<ResponseUpdateInformation> changeInformation(@Valid @RequestBody RequestUpdateInformation updateInformation) {
         return ResponseEntity.ok(userService.changeInformation(updateInformation));
     }
+
+
 }

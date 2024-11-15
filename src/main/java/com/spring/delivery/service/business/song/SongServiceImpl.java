@@ -85,7 +85,8 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public ResponseSong createSong(RequestCreateSong request) {
-        Song song = songMapper.toSong(request);
+        Song song = new Song();
+        song.setTitle(request.title());
         Artist artist = artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found"));
         song.setArtist(artist);
 

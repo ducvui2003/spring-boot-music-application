@@ -19,10 +19,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class Resource {
-    @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    Long id;
+public class Resource extends BaseModel {
     String url;
     @Enumerated(EnumType.STRING)
     @Column(length = 20)

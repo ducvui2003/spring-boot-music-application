@@ -17,6 +17,7 @@ public class ResponseSong {
     String title;
     String cover;
     String artist;
+    String url;
     String genre;
     Instant createdAt;
     Instant updatedAt;
