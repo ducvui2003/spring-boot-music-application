@@ -22,10 +22,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class User extends BaseModel {
+    @Column(unique = true, nullable = false)
     String email;
 
     @JsonIgnore
@@ -40,6 +38,7 @@ public class User {
 
     @Column(nullable = false)
     @Convert(converter = AuthTypeConverter.class)
+    @Builder.Default
     AuthType authType = AuthType.USERNAME_PASSWORD;
 
     @ManyToOne

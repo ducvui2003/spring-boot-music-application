@@ -10,10 +10,11 @@ import org.springframework.data.domain.Pageable;
 public interface SongService {
     ApiPaging<ResponseSongCard> getSongCard(Pageable pageable);
 
+    ApiPaging<ResponseSongCard> getSongCardPopular(Pageable pageable);
+
     ResponseSong getSongDetail(Long id);
 
     void increaseViewCount(Long id);
-
 
     ApiPaging<ResponseSongCard> getLikedSongs(Pageable pageable);
 

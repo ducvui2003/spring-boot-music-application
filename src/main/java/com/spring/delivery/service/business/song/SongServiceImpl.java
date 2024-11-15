@@ -9,6 +9,7 @@ import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.mapper.SongMapper;
 import com.spring.delivery.model.*;
 import com.spring.delivery.repository.*;
+import com.spring.delivery.util.PageableUtil;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.exception.AppErrorCode;
 import com.spring.delivery.util.exception.AppException;
@@ -35,12 +36,20 @@ public class SongServiceImpl implements SongService {
     AlbumRepository albumRepository;
     ResourceRepository resourceRepository;
     GenreRepository genreRepository;
+    PageableUtil pageableUtil;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
         Page<Song> page = songRepository.findAll(pageable);
-        List<ResponseSongCard> data = page.getContent().stream().map(songMapper::toSongCardResponse).toList();
-        return ApiPaging.<ResponseSongCard>builder().totalItems((int) page.getTotalElements()).totalPages(page.getTotalPages()).currentPage(page.getNumber()).size(page.getSize()).isLast(page.isLast()).isFirst(page.isFirst()).content(data).build();
+        ApiPaging<ResponseSongCard> apiPaging = pageableUtil.handlePaging(page, songMapper::toSongCardResponse);
+        return apiPaging;
+    }
+
+    @Override
+    public ApiPaging<ResponseSongCard> getSongCardPopular(Pageable pageable) {
+        Page<Song> page = songRepository.findSongPopular(pageable);
+        ApiPaging<ResponseSongCard> apiPaging = pageableUtil.handlePaging(page, songMapper::toSongCardResponse);
+        return apiPaging;
     }
 
     @Override
@@ -85,7 +94,8 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public ResponseSong createSong(RequestCreateSong request) {
-        Song song = songMapper.toSong(request);
+        Song song = new Song();
+        song.setTitle(request.title());
         Artist artist = artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found"));
         song.setArtist(artist);
 
