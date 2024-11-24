@@ -3,23 +3,13 @@ package com.spring.delivery.util;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import com.spring.delivery.model.JwtPayload;
-import com.spring.delivery.model.Permission;
-import com.spring.delivery.repository.PermissionRepository;
-import com.spring.delivery.repository.RoleRepository;
-import com.spring.delivery.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -173,4 +163,16 @@ public class SecurityUtil {
         Duration duration = Duration.between(now, createdToken);
         return duration.getSeconds();
     }
+
+    public Optional<ResponseAuthentication.UserDTO> getCurrentUserDTO() {
+        var optionalToken = getAccessToken();
+        if (optionalToken == null) return Optional.empty();
+        var tokenDecode = jwtDecoder.decode(optionalToken);
+        var userJson = tokenDecode.getClaimAsMap("user");
+        var user = ResponseAuthentication.UserDTO.initFromMapInfoUserDTO(userJson);
+        if (user == null)
+            return Optional.empty();
+        return Optional.of(user);
+    }
+
 }

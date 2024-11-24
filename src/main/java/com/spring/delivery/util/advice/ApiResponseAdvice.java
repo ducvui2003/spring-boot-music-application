@@ -34,7 +34,7 @@ public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
             @Nullable ServerHttpResponse response) {
 
         String path = request.getURI().getPath();
-        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) return body;
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/graphiql")) return body;
 
         HttpServletResponse httpServletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int statusCode = httpServletResponse.getStatus();

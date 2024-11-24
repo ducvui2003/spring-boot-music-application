@@ -1,34 +1,27 @@
 package com.spring.delivery.service.authentication;
 
+import com.spring.delivery.domain.request.RequestRegister;
+import com.spring.delivery.domain.response.ResponseAuthentication;
+import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.JwtPayload;
 import com.spring.delivery.model.Permission;
 import com.spring.delivery.model.Role;
-import com.spring.delivery.repository.RoleRepository;
-import com.spring.delivery.util.enums.AuthType;
-import com.spring.delivery.util.enums.RoleEnum;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Service;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
-import com.spring.delivery.domain.response.ResponseAuthentication;
-import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.User;
+import com.spring.delivery.repository.RoleRepository;
 import com.spring.delivery.repository.UserRepository;
 import com.spring.delivery.service.token.TokenService;
 import com.spring.delivery.util.SecurityUtil;
+import com.spring.delivery.util.enums.AuthType;
+import com.spring.delivery.util.enums.RoleEnum;
 import com.spring.delivery.util.exception.AppErrorCode;
 import com.spring.delivery.util.exception.AppException;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -41,22 +34,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     UserMapper userMapper = UserMapper.INSTANCE;
     SecurityUtil securityUtil;
     RoleRepository roleRepository;
+    VerifyService verifyService;
 
     @Override
-    public User register(String idToken, User user) {
-        FirebaseToken decodedToken;
-        try {
-            decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-            log.info("decoded token {}", decodedToken);
-        } catch (FirebaseAuthException e) {
-            throw new AppException(AppErrorCode.INVALID_TOKEN);
-        }
-
-        checkBeforeRegister(user.getEmail(), user.getPhoneNumber());
-
+    public void register(RequestRegister request) {
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            throw new AppException(AppErrorCode.EMAIL_EXISTED);
+        });
+        User user = userMapper.toUser(request);
         user.setVerified(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user.setAuthType(AuthType.USERNAME_PASSWORD);
+        user.setRole(roleRepository.findByName(RoleEnum.USER));
+        verifyService.sendOtp(user.getEmail());
+        userRepository.save(user);
     }
 
     @Override
@@ -100,44 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean checkBeforeRegister(String email, String phoneNumber) {
-        if (userRepository.existsByEmail(email))
-            throw new AppException(AppErrorCode.EMAIL_EXISTED);
-        if (userRepository.existsByPhoneNumber(phoneNumber))
-            throw new AppException(AppErrorCode.PHONE_NUMBER_EXISTED);
-
-        return true;
-    }
-
-    @Override
-    public User getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).orElse(null);
-    }
-
-    @Override
-    public ResponseAuthentication loginByPhoneNumber() {
-//        Không cần case TH user không tồn tại vì đã được xử lý ở phần loadUserDetail
-        String phoneNumber = SecurityUtil.getCurrentUserLogin().get();
-        log.info("loginByPhoneNumber {}", phoneNumber);
-
-        User user = this.getUserByPhoneNumber(phoneNumber);
-
-        ResponseAuthentication.UserDTO userDTO = userMapper.toUserDTO(user);
-        JwtPayload jwtPayload = getJwtPayload(user);
-
-        String accessToken = securityUtil.createAccessToken(jwtPayload);
-
-        String refreshToken = securityUtil.createRefreshToken(jwtPayload);
-
-        return ResponseAuthentication.builder()
-                .user(userDTO)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
-
-    @Override
-    public ResponseAuthentication loginByEmail() {
+    public ResponseAuthentication login() {
 //        Không cần case TH user không tồn tại vì đã được nạp vào context
         String email = SecurityUtil.getCurrentUserLogin().get();
         log.info("email {}", email);
@@ -182,5 +136,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .permissions(user.getRole().getPermissions().stream().map(Permission::getName).toList())
                 .timeExpiredPlus(1)
                 .build();
+    }
+
+    @Override
+    public void verify(String email, String otp) {
+        verifyService.verifyOtp(email, otp);
     }
 }

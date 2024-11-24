@@ -11,7 +11,7 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
-    name: spring-identity-service
+    name: spring-music-player
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:music-player}
     username: ${MYSQL_USER:root}
@@ -74,6 +74,8 @@ app:
     - /api/v1/auth/login-google-web
     - /api/v1/auth/password/forgot
     - /api/v1/auth/password/reset
+    - /api/v1/resource/signature-key
+    - /api/v1/resource/create
     - /swagger-ui.html
     - /v3/api-docs
     - /v3/api-docs/**
@@ -95,4 +97,3 @@ app:
     resend:
       expiration: 1440000
       max-try: 3
-  ffmpeg: classpath:static/hls/ffmpeg

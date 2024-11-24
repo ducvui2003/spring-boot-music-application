@@ -1,26 +1,33 @@
 package com.spring.delivery.service.email;
 
-import com.spring.delivery.service.http.notification.HttpEmailService;
+import brevo.ApiException;
+import brevoApi.TransactionalEmailsApi;
+import brevoModel.SendSmtpEmail;
+import brevoModel.SendSmtpEmailSender;
+import brevoModel.SendSmtpEmailTo;
 import com.spring.delivery.util.enums.Template;
-import com.spring.event.notification.request.Receiver;
-import com.spring.event.notification.request.TransactionEmailTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class EmailServiceImpl implements EmailService {
-    HttpEmailService httpEmailService;
+    TransactionalEmailsApi transactionalEmailsApi;
+    SendSmtpEmailSender sender;
 
     @Override
     public void sentWelcome(String to) {
-        sent(to, null, Template.WEL_COME);
+        sent(to, null, Template.WELL_COME);
     }
 
     @Override
@@ -37,17 +44,22 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("code", otp.split(""));
         templateModel.put("email", email);
-        this.sent(email, templateModel, Template.VERIFY_EMAIL);
+        sent(email, templateModel, Template.VERIFY_ACCOUNT);
     }
 
     @Async
-    public void sent(String to, Map<String, Object> params, Template templateName) {
-        TransactionEmailTemplate transactionEmailTemplate = TransactionEmailTemplate.builder()
-                .receiver(new Receiver[]{Receiver.builder().email(to).build()})
-                .template(templateName.name())
-                .params(params)
-                .build();
-        httpEmailService.sendEmail(transactionEmailTemplate);
+    public void sent(String to, Map<String, Object> params, Template template) {
+        SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
+        SendSmtpEmailTo recipient = new SendSmtpEmailTo();
+        recipient.setEmail(to);
+        sendSmtpEmail.setSender(sender);
+        sendSmtpEmail.setTo(Arrays.asList(recipient));
+        sendSmtpEmail.setTemplateId(template.getValue());
+        sendSmtpEmail.setParams(params);
+        try {
+            transactionalEmailsApi.sendTransacEmail(sendSmtpEmail);
+        } catch (ApiException e) {
+            log.error("Error sending email", e);
+        }
     }
-
 }
