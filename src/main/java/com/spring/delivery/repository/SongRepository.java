@@ -18,6 +18,9 @@ import java.util.Set;
 public interface SongRepository extends JpaRepository<Song, Long> {
     Page<Song> findAll(Pageable pageable);
 
+    @Query("SELECT s FROM Song s ORDER BY s.views DESC")
+    Page<Song> findSongPopular(Pageable pageable);
+
     Set<Song> findAllByIdIn(List<Long> ids);
 
     Optional<Song> findById(Long id);

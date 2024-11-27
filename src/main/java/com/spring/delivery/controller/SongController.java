@@ -1,9 +1,12 @@
 package com.spring.delivery.controller;
 
 import com.spring.delivery.domain.ApiPaging;
+import com.spring.delivery.domain.request.RequestCreateSong;
+import com.spring.delivery.domain.request.RequestUpdateSong;
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.service.business.song.SongService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +28,7 @@ public class SongController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<ResponseSong> getSong(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseSong> getSongDetail(@PathVariable(name = "id") Long id) {
         ResponseSong song = songService.getSongDetail(id);
         return ResponseEntity.ok(song);
     }
@@ -52,6 +55,16 @@ public class SongController {
     public ResponseEntity<Void> unlikeSong(@PathVariable("id") Long id) {
         songService.unlikeSong(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ResponseSong> createSong(@Valid @RequestBody RequestCreateSong request) {
+        return ResponseEntity.ok().body(songService.createSong(request));
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<ResponseSong> updateSong(@PathVariable("id") Long id, @Valid @RequestBody RequestUpdateSong request) {
+        return ResponseEntity.ok().body(songService.updateSong(id, request));
     }
 
 }
