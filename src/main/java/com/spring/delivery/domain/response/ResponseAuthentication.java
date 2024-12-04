@@ -17,7 +17,6 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class ResponseAuthentication {
-    @JsonProperty("access_token")
     private String accessToken;
 
     @JsonIgnore
