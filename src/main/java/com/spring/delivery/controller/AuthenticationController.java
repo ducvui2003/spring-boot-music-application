@@ -93,7 +93,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SHIPPER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ApiMessage("Logout")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
