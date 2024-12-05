@@ -10,9 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponsePlaylistCreated {
+    Integer id;
     String name;
     String description;
-    String coverUrl;
-    boolean isPublic;
-    List<Long> songIds;
+    Boolean isPublic;
 }

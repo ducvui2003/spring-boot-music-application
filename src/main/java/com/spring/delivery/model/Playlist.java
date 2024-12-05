@@ -18,7 +18,7 @@ public class Playlist extends BaseModel {
     String description;
     @OneToOne
     Resource cover;
-    boolean isPublic;
+    Boolean isPublic;
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;

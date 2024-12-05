@@ -45,11 +45,8 @@ public class AuthenticationController {
     @ApiMessage("Login")
     @PostMapping("/login")
     public ResponseEntity<ResponseAuthentication> login(@Valid @RequestBody RequestLogin userLogin) {
-        // Nạp input gồm username và password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userLogin.email(), userLogin.password());
-        // Sử dụng method loadUserDetail đã implement để lấy ra user trong db
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        // Get user đã đăng nhập thành công vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authentication);
         ResponseAuthentication response = authenticationService.login();
         ResponseCookie cookie = securityUtil.updateRefreshToken(response.getRefreshToken());
@@ -116,6 +113,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
+    @ApiMessage("Verify success")
     public ResponseEntity<Void> verify(@Valid @RequestBody RequestVerify request) {
         authenticationService.verify(request.email(), request.otp());
         return ResponseEntity.ok().build();
