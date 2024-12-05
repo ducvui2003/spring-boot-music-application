@@ -9,6 +9,7 @@ package com.spring.delivery.service.business.genre;
 import com.spring.delivery.domain.ApiPaging;
 import com.spring.delivery.domain.request.RequestGenreCreated;
 import com.spring.delivery.domain.response.ResponseGenre;
+import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.mapper.GenreMapper;
 import com.spring.delivery.model.Genre;
 import com.spring.delivery.model.Resource;
@@ -69,5 +70,10 @@ public class GenreServiceImpl implements GenreService {
         genre.setSongs(songs);
         image.ifPresent(genre::setCover);
         genreRepository.save(genre);
+    }
+
+    @Override
+    public ApiPaging<ResponseSongCard> getSongs(Pageable pageable) {
+        return null;
     }
 }

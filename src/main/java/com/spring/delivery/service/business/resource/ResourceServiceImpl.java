@@ -28,10 +28,11 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourceResponse createResource(RequestCreateResource resource) {
-        String url = cloudinaryService.generateUrl(resource.publicId());
+        String url = cloudinaryService.generateImage(resource.publicId());
         Resource savedResource = resourceRepository.save(Resource.builder()
                 .url(url)
                 .tag(resource.tag())
+                .name(resource.name())
                 .publicId(resource.publicId())
                 .build());
         resourceRepository.save(savedResource);

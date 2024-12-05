@@ -2,3 +2,24 @@ jwt:
   base64-secret: aCq9WZG6IUo0nxQnF4VVEtQbyPcoobHy6yDFYctyKfs=
   access-token-validity-in-seconds: 86400
   refresh-token-validity-in-seconds: 8640000
+spring:
+  datasource:
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: none
+  data:
+    redis:
+      host: localhost
+      port: 6379
+app:
+  service:
+    cloudinary:
+      cloud-name: yourstyle
+      api-key: 571775183462891
+      api-secret: rfWLwei-lyOo2LWTIdlu2E5Hr_Y
+      folder: music-media
+    brevo:
+      api-key: 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
+      email: ducvui2003@gmail.com
+      name: MUSIUM-SUPPORTER

@@ -25,4 +25,5 @@ public class Resource extends BaseModel {
     @Column(length = 20)
     Tag tag;
     String publicId;
+    String name;
 }
