@@ -9,6 +9,7 @@ import com.spring.delivery.repository.PlaylistRepository;
 import com.spring.delivery.repository.ResourceRepository;
 import com.spring.delivery.repository.SongRepository;
 import com.spring.delivery.repository.UserRepository;
+import com.spring.delivery.service.cloudinary.CloudinaryService;
 import com.spring.delivery.util.exception.AppErrorCode;
 import com.spring.delivery.util.exception.AppException;
 import lombok.AccessLevel;
@@ -29,6 +30,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     ResourceRepository resourceRepository;
     SongRepository songRepository;
     UserRepository userRepository;
+    CloudinaryService cloudinaryService;
 
     @Override
     public ResponsePlaylistCreated createPlaylist(RequestPlaylistCreated request, String email) {
@@ -50,7 +52,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         }));
         playlist = playlistRepository.save(playlist);
 
-        return playListMapper.toResponsePlaylistCreated(playlist);
+        return this.toResponsePlaylistCreated(playlist);
     }
 
     @Override
@@ -121,5 +123,13 @@ public class PlaylistServiceImpl implements PlaylistService {
             return;
         }
         playlistRepository.save(playlist);
+    }
+
+    private ResponsePlaylistCreated toResponsePlaylistCreated(Playlist entity) {
+        ResponsePlaylistCreated response = playListMapper.toResponsePlaylistCreated(entity);
+        if (entity.getCover() != null) {
+            response.setCover(cloudinaryService.generateImage(entity.getCover().getPublicId()));
+        }
+        return response;
     }
 }

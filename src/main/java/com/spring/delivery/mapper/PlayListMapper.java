@@ -17,7 +17,7 @@ public interface PlayListMapper {
     Playlist toPlaylist(RequestPlaylistCreated request);
 
     @Mapping(source = "songs", target = "songIds", qualifiedByName = "toSongIds")
-    @Mapping(source = "cover", target = "coverUrl", qualifiedByName = "toCoverUrl")
+    @Mapping(target = "cover", ignore = true)
     ResponsePlaylistCreated toResponsePlaylistCreated(Playlist entity);
 
     @Named("toSongIds")
@@ -25,11 +25,4 @@ public interface PlayListMapper {
         return songs.stream().map(Song::getId).toList();
     }
 
-    @Named("toCoverUrl")
-    default String toCoverUrl(Resource resource) {
-        if (resource == null) {
-            return null;
-        }
-        return resource.getUrl();
-    }
 }

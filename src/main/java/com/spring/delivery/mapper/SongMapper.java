@@ -14,13 +14,12 @@ public interface SongMapper {
 
     @Mapping(target = "artist", source = "artist.name")
     @Mapping(target = "genre", source = "genre.name")
-    @Mapping(target = "cover", source = "cover.url")
-    @Mapping(target = "url", source = "source.url")
+    @Mapping(target = "cover", ignore = true)
     ResponseSong toSongResponse(Song song);
 
     @Mapping(target = "artist", source = "artist.name")
-    @Mapping(target = "cover", source = "cover.url")
     @Mapping(target = "title", source = "title")
+    @Mapping(target = "cover", ignore = true)
     ResponseSongCard toSongCardResponse(Song song);
 
 }

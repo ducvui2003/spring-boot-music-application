@@ -12,7 +12,7 @@ import java.util.List;
 public class ResponsePlaylistCreated {
     String name;
     String description;
-    String coverUrl;
+    String cover;
     boolean isPublic;
     List<Long> songIds;
 }

@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ArtistMapper {
     @Mapping(target = "name", source = "name")
-    @Mapping(target = "avatar", source = "avatar.url")
+    @Mapping(target = "avatar", ignore = true)
     ResponseArtistCard toArtistCardResponse(Artist artist);
 }

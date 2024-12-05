@@ -110,7 +110,7 @@ public class SongServiceImpl implements SongService {
         song.setCover(cover);
         Resource source = resourceRepository.findById(request.sourceId()).orElseThrow(() -> new AppException("Resource not found"));
         song.setSource(source);
-        return songMapper.toSongResponse(songRepository.save(song));
+        return this.toSongResponse(songRepository.save(song));
     }
 
     @Override
@@ -121,14 +121,20 @@ public class SongServiceImpl implements SongService {
         song.setArtist(artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found")));
         song.setGenre(genreRepository.findByName(request.genre()).orElseThrow(() -> new AppException("Genre not found")));
         song.setCover(resourceRepository.findById(request.coverId()).orElseThrow(() -> new AppException("Resource not found")));
-        return songMapper.toSongResponse(songRepository.save(song));
+        return this.toSongResponse(songRepository.save(song));
     }
 
     private ResponseSong toSongResponse(Song song) {
         ResponseSong responseSong = songMapper.toSongResponse(song);
         //        public-id -> HLS URLs
-        String url = cloudinaryService.generateHLS(song.getSource().getPublicId());
-        responseSong.setUrl(url);
+        if (song.getSource() != null) {
+            String url = cloudinaryService.generateHLS(song.getSource().getPublicId());
+            responseSong.setUrl(url);
+        }
+        if (song.getArtist().getAlbums() != null) {
+            String url = cloudinaryService.generateImage(song.getCover().getPublicId());
+            responseSong.setCover(url);
+        }
         return responseSong;
     }
 
