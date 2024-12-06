@@ -39,7 +39,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public String generateUrl(String publicId) {
+    public String generateImage(String publicId) {
         return cloudinary.url().generate(publicId);
     }
 

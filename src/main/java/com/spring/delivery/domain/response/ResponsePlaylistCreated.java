@@ -13,5 +13,6 @@ public class ResponsePlaylistCreated {
     Integer id;
     String name;
     String description;
+    String cover;
     Boolean isPublic;
 }

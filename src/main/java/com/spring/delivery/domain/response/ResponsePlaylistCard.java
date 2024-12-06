@@ -8,10 +8,24 @@
 
 package com.spring.delivery.domain.response;
 
-public record ResponsePlaylistCard(
-        Integer id,
-        String name,
-        String description,
-        String coverUrl,
-        Integer totalSong) {
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+import java.time.Instant;
+
+@Data
+@FieldDefaults(level = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class ResponsePlaylistCard {
+    Long id;
+    String name;
+    String description;
+    String coverUrl;
+    Integer totalSong;
+    Instant createdAt;
+    Instant updatedAt;
 }

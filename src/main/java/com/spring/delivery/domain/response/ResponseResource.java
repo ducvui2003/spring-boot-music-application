@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResourceResponse {
+public class ResponseResource {
     Long id;
     String url;
     Tag tag;

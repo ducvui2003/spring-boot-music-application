@@ -11,7 +11,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseSongCard {
-    String thumbnail;
+    Long id;
+    String cover;
     String title;
     String artist;
 }

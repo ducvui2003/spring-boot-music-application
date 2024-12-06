@@ -24,7 +24,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 		String path = request.getRequestURI();
 
 		// Log the request path
-		log.warn("Incoming request path: {} ", path);
+		log.info("Incoming request path: {} ", path);
 
 		// Continue with the next filter in the chain
 		filterChain.doFilter(request, response);

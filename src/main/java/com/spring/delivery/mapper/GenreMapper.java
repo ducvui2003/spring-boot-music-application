@@ -17,7 +17,7 @@ import org.mapstruct.factory.Mappers;
 public interface GenreMapper {
     GenreMapper INSTANCE = Mappers.getMapper(GenreMapper.class);
 
-    @Mapping(target = "cover", source = "cover.url")
+    @Mapping(target = "cover", ignore = true)
     ResponseGenre toGenreResponse(Genre genre);
 
     @Mapping(target = "cover", ignore = true)

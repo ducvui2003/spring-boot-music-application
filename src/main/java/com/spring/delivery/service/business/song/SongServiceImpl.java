@@ -9,6 +9,7 @@ import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.mapper.SongMapper;
 import com.spring.delivery.model.*;
 import com.spring.delivery.repository.*;
+import com.spring.delivery.service.cloudinary.CloudinaryService;
 import com.spring.delivery.util.PageableUtil;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.exception.AppErrorCode;
@@ -20,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,19 +37,18 @@ public class SongServiceImpl implements SongService {
     ResourceRepository resourceRepository;
     GenreRepository genreRepository;
     PageableUtil pageableUtil;
+    CloudinaryService cloudinaryService;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
         Page<Song> page = songRepository.findAll(pageable);
-        ApiPaging<ResponseSongCard> apiPaging = pageableUtil.handlePaging(page, songMapper::toSongCardResponse);
-        return apiPaging;
+        return pageableUtil.handlePaging(page, this::toSongResponseCard);
     }
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCardPopular(Pageable pageable) {
         Page<Song> page = songRepository.findSongPopular(pageable);
-        ApiPaging<ResponseSongCard> apiPaging = pageableUtil.handlePaging(page, songMapper::toSongCardResponse);
-        return apiPaging;
+        return pageableUtil.handlePaging(page, this::toSongResponseCard);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class SongServiceImpl implements SongService {
         if (song.isEmpty()) {
             throw new AppException("Song not found");
         }
-        return songMapper.toSongResponse(song.get());
+        return this.toSongResponse(song.get());
     }
 
     @Override
@@ -109,7 +108,7 @@ public class SongServiceImpl implements SongService {
         song.setCover(cover);
         Resource source = resourceRepository.findById(request.sourceId()).orElseThrow(() -> new AppException("Resource not found"));
         song.setSource(source);
-        return songMapper.toSongResponse(songRepository.save(song));
+        return this.toSongResponse(songRepository.save(song));
     }
 
     @Override
@@ -120,6 +119,27 @@ public class SongServiceImpl implements SongService {
         song.setArtist(artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found")));
         song.setGenre(genreRepository.findByName(request.genre()).orElseThrow(() -> new AppException("Genre not found")));
         song.setCover(resourceRepository.findById(request.coverId()).orElseThrow(() -> new AppException("Resource not found")));
-        return songMapper.toSongResponse(songRepository.save(song));
+        return this.toSongResponse(songRepository.save(song));
+    }
+
+    private ResponseSong toSongResponse(Song song) {
+        ResponseSong responseSong = songMapper.toSongResponse(song);
+        //        public-id -> HLS URLs
+        if (song.getSource() != null) {
+            String url = cloudinaryService.generateHLS(song.getSource().getPublicId());
+            responseSong.setUrl(url);
+        }
+        if (song.getArtist().getAlbums() != null) {
+            String url = cloudinaryService.generateImage(song.getCover().getPublicId());
+            responseSong.setCover(url);
+        }
+        return responseSong;
+    }
+
+    private ResponseSongCard toSongResponseCard(Song song) {
+        ResponseSongCard responseSong = songMapper.toSongCardResponse(song);
+        String url = cloudinaryService.generateImage(song.getCover().getPublicId());
+        responseSong.setCover(url);
+        return responseSong;
     }
 }

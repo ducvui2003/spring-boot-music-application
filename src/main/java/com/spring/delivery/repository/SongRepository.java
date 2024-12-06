@@ -1,5 +1,6 @@
 package com.spring.delivery.repository;
 
+import com.spring.delivery.model.Playlist;
 import com.spring.delivery.model.Song;
 import feign.Param;
 import jakarta.transaction.Transactional;
@@ -45,4 +46,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     void removeSongFromFavoriteIfExists(@Param("userId") long userId, @Param("songId") Long songId);
 
     List<Song> findAll();
+
+    List<Song> findByPlaylistsContains(Playlist playlist, Pageable pageable);
 }

@@ -5,6 +5,7 @@ import com.spring.delivery.domain.response.ResponseAlbumCard;
 import com.spring.delivery.mapper.AlbumMapper;
 import com.spring.delivery.model.Album;
 import com.spring.delivery.repository.AlbumRepository;
+import com.spring.delivery.service.cloudinary.CloudinaryService;
 import com.spring.delivery.util.PageableUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,18 @@ public class AlbumServiceImpl implements AlbumService {
     AlbumRepository albumRepository;
     PageableUtil pageableUtil;
     AlbumMapper albumMapper;
+    CloudinaryService cloudinaryService;
 
     @Override
     public ApiPaging<ResponseAlbumCard> getAlbumCard(Pageable pageable) {
         Page<Album> page = albumRepository.findTopAlbums(pageable);
-        ApiPaging<ResponseAlbumCard> apiPaging = pageableUtil.handlePaging(page, entity -> albumMapper.toResponseAlbumCard(entity));
+        ApiPaging<ResponseAlbumCard> apiPaging = pageableUtil.handlePaging(page, entity -> {
+            ResponseAlbumCard response = albumMapper.toResponseAlbumCard(entity);
+            if (entity.getArtist().getAlbums() != null) {
+                response.setCover(cloudinaryService.generateImage(entity.getCover().getPublicId()));
+            }
+            return response;
+        });
         return apiPaging;
     }
 }
