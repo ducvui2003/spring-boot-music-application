@@ -21,4 +21,6 @@ public interface AuthenticationService {
     User getUserByEmail(String email);
 
     void verify(String email, String otp);
+
+    void resendOtp(String email);
 }
