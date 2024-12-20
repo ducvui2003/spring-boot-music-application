@@ -146,4 +146,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void verify(String email, String otp) {
         verifyService.verifyOtp(email, otp);
     }
+
+    @Override
+    public void resendOtp(String email) {
+        verifyService.sendOtp(email);
+    }
 }

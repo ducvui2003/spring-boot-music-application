@@ -8,6 +8,8 @@ import com.spring.delivery.domain.response.ResponseAuthentication;
 import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.User;
 import com.spring.delivery.service.authentication.AuthenticationService;
+import com.spring.delivery.service.authentication.VerifyServiceImpl;
+import com.spring.delivery.service.email.EmailService;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.anotation.ApiMessage;
 import com.spring.delivery.util.exception.AppErrorCode;
@@ -41,6 +43,7 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
     AuthenticationManagerBuilder authenticationManagerBuilder;
     SecurityUtil securityUtil;
+    VerifyServiceImpl verifyService;
 
     @ApiMessage("Login")
     @PostMapping("/login")
@@ -78,12 +81,10 @@ public class AuthenticationController {
     // Sử dụng để lấy lại access token khi hết hạn
     @ApiMessage("Refresh token")
     @PostMapping("/refresh-token")
-    public ResponseEntity<ResponseAuthentication> refreshAccessToken(
-            @CookieValue(name = "refresh_token") String refreshToken) {
+    public ResponseEntity<ResponseAuthentication> refreshAccessToken(@CookieValue(name = "refresh_token") String refreshToken) {
         securityUtil.validateRefreshToken(refreshToken);
         //  Check user by refresh authCode
-        String email =
-                SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
 
         ResponseAuthentication responseBody = authenticationService.getAccessToken(email);
 
@@ -93,19 +94,11 @@ public class AuthenticationController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ApiMessage("Logout")
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(
-            @CookieValue(
-                    name = "${app.cookie.key.refreshToken}",
-                    defaultValue = "${app.cookie.defaultValue.refreshToken}")
-            String refreshToken,
-            HttpServletRequest request)
-            throws AppException {
+    public ResponseEntity<Void> logout(@CookieValue(name = "${app.cookie.key.refreshToken}", defaultValue = "${app.cookie.defaultValue.refreshToken}") String refreshToken, HttpServletRequest request) throws AppException {
         if (refreshToken.equals(cookieProperties.getRefreshTokenDefault()))
             throw new AppException(AppErrorCode.REFRESH_TOKEN_NOT_FOUND);
-        String email =
-                SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
-        String accessToken = SecurityUtil.getAccessTokenFromRequest(request)
-                .orElseThrow(() -> new AppException(AppErrorCode.ACCESS_TOKEN_NOT_FOUND));
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        String accessToken = SecurityUtil.getAccessTokenFromRequest(request).orElseThrow(() -> new AppException(AppErrorCode.ACCESS_TOKEN_NOT_FOUND));
         this.authenticationService.logout(email, accessToken, refreshToken);
         SecurityContextHolder.getContext().setAuthentication(null);
         ResponseCookie cookie = securityUtil.clearRefreshToken();
@@ -113,9 +106,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    @ApiMessage("Verify success")
+    @ApiMessage("Verify")
     public ResponseEntity<Void> verify(@RequestHeader String email, @Valid @RequestBody RequestVerify request) {
         authenticationService.verify(email, request.otp());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/resend-verify")
+    @ApiMessage("Resend Verify")
+    public ResponseEntity<Void> resendOtp(@RequestHeader String email) {
+        verifyService.sendOtp(email);
         return ResponseEntity.ok().build();
     }
 }
