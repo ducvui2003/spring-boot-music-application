@@ -20,9 +20,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Resource extends BaseModel {
-    String url;
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     Tag tag;
     String publicId;
+    String name;
 }

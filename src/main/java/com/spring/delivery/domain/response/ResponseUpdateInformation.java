@@ -14,5 +14,5 @@ public class ResponseUpdateInformation {
     private String fullName;
     private String phoneNumber;
     private boolean sex;
-    private Date birthDay;
+    private Date birthday;
 }
