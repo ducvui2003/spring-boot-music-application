@@ -10,8 +10,12 @@ package com.spring.delivery.service.opt;
 
 import com.spring.delivery.util.enums.RedisNameSpace;
 
+import java.util.Optional;
+
 public interface OTPService {
 	void verifyOTP(RedisNameSpace nameSpace, String email, String otp);
 
-	String createOPT(RedisNameSpace nameSpace, String email);
+	String createOTP(RedisNameSpace nameSpace, String email);
+
+	Optional<String> getOtp(RedisNameSpace redisNameSpace, String email);
 }

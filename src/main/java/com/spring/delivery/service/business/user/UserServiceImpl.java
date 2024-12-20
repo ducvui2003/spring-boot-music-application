@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(updateInformation.getFullName());
         user.setPhoneNumber(updateInformation.getPhoneNumber());
         user.setSex(updateInformation.isSex());
-        user.setBirthDay(updateInformation.getBirthDay());
+        user.setBirthday(updateInformation.getBirthday());
         userRepository.save(user);
         return userMapper.toResponseUpdateInformation(user);
     }

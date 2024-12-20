@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +19,6 @@ public class RequestUpdateInformation {
     private String fullName;
     private String phoneNumber;
     private boolean sex;
-    private Date birthDay;
+    private LocalDate birthday;
 
 }

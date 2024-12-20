@@ -114,8 +114,8 @@ public class AuthenticationController {
 
     @PostMapping("/verify")
     @ApiMessage("Verify success")
-    public ResponseEntity<Void> verify(@Valid @RequestBody RequestVerify request) {
-        authenticationService.verify(request.email(), request.otp());
+    public ResponseEntity<Void> verify(@RequestHeader String email, @Valid @RequestBody RequestVerify request) {
+        authenticationService.verify(email, request.otp());
         return ResponseEntity.ok().build();
     }
 }

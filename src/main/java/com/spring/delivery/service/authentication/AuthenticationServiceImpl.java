@@ -12,6 +12,7 @@ import com.spring.delivery.repository.UserRepository;
 import com.spring.delivery.service.token.TokenService;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.enums.AuthType;
+import com.spring.delivery.util.enums.RedisNameSpace;
 import com.spring.delivery.util.enums.RoleEnum;
 import com.spring.delivery.util.exception.AppErrorCode;
 import com.spring.delivery.util.exception.AppException;
@@ -22,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,11 +41,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void register(RequestRegister request) {
-        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+        userRepository.findByEmailAndVerifiedIsTrue(request.getEmail()).ifPresent(user -> {
             throw new AppException(AppErrorCode.EMAIL_EXISTED);
         });
+        userRepository.deleteUserByEmailAndVerifiedIsFalse(request.getEmail());
         User user = userMapper.toUser(request);
-        user.setVerified(true);
+        user.setVerified(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAuthType(AuthType.USERNAME_PASSWORD);
         user.setRole(roleRepository.findByName(RoleEnum.USER));
