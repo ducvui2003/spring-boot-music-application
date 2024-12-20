@@ -79,7 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        return userRepository.findByEmailAndVerifiedIsTrue(email).orElse(null);
     }
 
 
