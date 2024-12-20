@@ -9,7 +9,6 @@ import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.User;
 import com.spring.delivery.service.authentication.AuthenticationService;
 import com.spring.delivery.service.authentication.VerifyServiceImpl;
-import com.spring.delivery.service.email.EmailService;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.anotation.ApiMessage;
 import com.spring.delivery.util.exception.AppErrorCode;
