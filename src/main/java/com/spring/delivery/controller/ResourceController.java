@@ -2,7 +2,7 @@ package com.spring.delivery.controller;
 
 import com.spring.delivery.domain.request.RequestSignature;
 import com.spring.delivery.domain.request.RequestCreateResource;
-import com.spring.delivery.domain.response.ResourceResponse;
+import com.spring.delivery.domain.response.ResponseResource;
 import com.spring.delivery.domain.response.ResponseSignature;
 import com.spring.delivery.service.business.resource.ResourceService;
 import com.spring.delivery.service.cloudinary.CloudinaryService;
@@ -22,8 +22,8 @@ public class ResourceController {
     CloudinaryService cloudinaryService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResourceResponse> getResource(@PathVariable("id") Long id) {
-        ResourceResponse response = resourceService.getResource(id);
+    public ResponseEntity<ResponseResource> getResource(@PathVariable("id") Long id) {
+        ResponseResource response = resourceService.getResource(id);
         if (response == null)
             return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(response);
@@ -35,9 +35,9 @@ public class ResourceController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResourceResponse> createResource(
+    public ResponseEntity<ResponseResource> createResource(
             @RequestBody RequestCreateResource request) {
-        ResourceResponse response = resourceService.createResource(request);
+        ResponseResource response = resourceService.createResource(request);
         if (response == null)
             return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(response);

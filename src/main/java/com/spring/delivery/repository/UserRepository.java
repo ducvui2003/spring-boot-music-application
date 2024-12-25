@@ -17,26 +17,29 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-	boolean existsByEmail(String email);
+    Optional<User> findByEmailAndVerifiedIsTrue(String email);
 
-	public User getUserByEmail(String email);
-	@Transactional
-	void deleteByVerifiedFalse();
+    boolean existsByEmail(String email);
 
-	@Transactional
-	@Modifying
-	@Query("UPDATE User user SET user.verified = :verifyStatus WHERE user.email = :email")
-	void updateVerifyStatusByEmail(@Param("email") String email, @Param("verifyStatus") boolean isVerify);
+    public User getUserByEmail(String email);
 
-	@Transactional
-	@Modifying
-	@Query("UPDATE User user SET user.password = :passwordEncoded WHERE user.email = :email")
-	void updatePasswordByEmail(@Param("email") String email, @Param("passwordEncoded") String passwordEncoded);
+    @Transactional
+    void deleteByVerifiedFalse();
 
-	boolean existsByEmailAndVerifiedIsTrue(String email);
+    @Transactional
+    @Modifying
+    @Query("UPDATE User user SET user.verified = :verifyStatus WHERE user.email = :email")
+    void updateVerifyStatusByEmail(@Param("email") String email, @Param("verifyStatus") boolean isVerify);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User user SET user.password = :passwordEncoded WHERE user.email = :email")
+    void updatePasswordByEmail(@Param("email") String email, @Param("passwordEncoded") String passwordEncoded);
 
+    boolean existsByEmailAndVerifiedIsTrue(String email);
 
+    @Transactional
+    Integer deleteUserByEmailAndVerifiedIsFalse(String email);
 }

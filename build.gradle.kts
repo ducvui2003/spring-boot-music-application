@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     java
     id("org.springframework.boot") version "3.3.2"
@@ -36,6 +38,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -75,19 +78,22 @@ dependencyManagement {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
     }
 }
-spotless {
-    java {
-        // Target only Java files in src/main/java
-        target("src/main/java/**/*.java");
-//        palantirJavaFormat();
-        removeUnusedImports();
-        toggleOffOn();
-        trimTrailingWhitespace();
-        indentWithTabs(4);
-        importOrder("java", "javax", "org", "com", "com.diffplug");
-    }
-}
+//spotless {
+//    java {
+//        // Target only Java files in src/main/java
+//        target("src/main/java/**/*.java");
+////        palantirJavaFormat();
+//        removeUnusedImports();
+//        toggleOffOn();
+//        trimTrailingWhitespace();
+//        indentWithTabs(4);
+//        importOrder("java", "javax", "org", "com", "com.diffplug");
+//    }
+//}
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+tasks.withType<BootJar> {
+    mainClass.set("com.spring.delivery.SpringMusicApplication");
 }

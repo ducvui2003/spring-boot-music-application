@@ -29,11 +29,13 @@ public class LimitVerifyInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable Object handler) {
-		String email = request.getHeader(RequestHeader.PHONE_NUMBER.getName());
+		String email = request.getHeader(RequestHeader.EMAIL.getName());
 		String otpKey = RedisUtil.generateKey(RedisNameSpace.OTP_VERIFY_EMAIL, email);
 
 		// TH: Chưa đăng ký mà xác thực OTP
-		if (!redisService.hasKey(otpKey) || !userRepository.existsByEmail(email))
+		boolean isExist = userRepository.existsByEmail(email);
+		boolean isExistKey = redisService.hasKey(otpKey);
+		if (!isExistKey || !isExist)
 			throw new AppException(AppErrorCode.USER_NOT_FOUND);
 
 		return true;

@@ -8,6 +8,7 @@ import com.spring.delivery.domain.response.ResponseAuthentication;
 import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.User;
 import com.spring.delivery.service.authentication.AuthenticationService;
+import com.spring.delivery.service.authentication.VerifyServiceImpl;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.anotation.ApiMessage;
 import com.spring.delivery.util.exception.AppErrorCode;
@@ -41,15 +42,13 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
     AuthenticationManagerBuilder authenticationManagerBuilder;
     SecurityUtil securityUtil;
+    VerifyServiceImpl verifyService;
 
     @ApiMessage("Login")
     @PostMapping("/login")
     public ResponseEntity<ResponseAuthentication> login(@Valid @RequestBody RequestLogin userLogin) {
-        // Nạp input gồm username và password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userLogin.email(), userLogin.password());
-        // Sử dụng method loadUserDetail đã implement để lấy ra user trong db
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        // Get user đã đăng nhập thành công vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authentication);
         ResponseAuthentication response = authenticationService.login();
         ResponseCookie cookie = securityUtil.updateRefreshToken(response.getRefreshToken());
@@ -81,34 +80,24 @@ public class AuthenticationController {
     // Sử dụng để lấy lại access token khi hết hạn
     @ApiMessage("Refresh token")
     @PostMapping("/refresh-token")
-    public ResponseEntity<ResponseAuthentication> refreshAccessToken(
-            @CookieValue(name = "refresh_token") String refreshToken) {
+    public ResponseEntity<ResponseAuthentication> refreshAccessToken(@CookieValue(name = "refresh_token") String refreshToken) {
         securityUtil.validateRefreshToken(refreshToken);
         //  Check user by refresh authCode
-        String email =
-                SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
 
         ResponseAuthentication responseBody = authenticationService.getAccessToken(email);
 
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SHIPPER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ApiMessage("Logout")
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(
-            @CookieValue(
-                    name = "${app.cookie.key.refreshToken}",
-                    defaultValue = "${app.cookie.defaultValue.refreshToken}")
-            String refreshToken,
-            HttpServletRequest request)
-            throws AppException {
+    public ResponseEntity<Void> logout(@CookieValue(name = "${app.cookie.key.refreshToken}", defaultValue = "${app.cookie.defaultValue.refreshToken}") String refreshToken, HttpServletRequest request) throws AppException {
         if (refreshToken.equals(cookieProperties.getRefreshTokenDefault()))
             throw new AppException(AppErrorCode.REFRESH_TOKEN_NOT_FOUND);
-        String email =
-                SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
-        String accessToken = SecurityUtil.getAccessTokenFromRequest(request)
-                .orElseThrow(() -> new AppException(AppErrorCode.ACCESS_TOKEN_NOT_FOUND));
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        String accessToken = SecurityUtil.getAccessTokenFromRequest(request).orElseThrow(() -> new AppException(AppErrorCode.ACCESS_TOKEN_NOT_FOUND));
         this.authenticationService.logout(email, accessToken, refreshToken);
         SecurityContextHolder.getContext().setAuthentication(null);
         ResponseCookie cookie = securityUtil.clearRefreshToken();
@@ -116,8 +105,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<Void> verify(@Valid @RequestBody RequestVerify request) {
-        authenticationService.verify(request.email(), request.otp());
+    @ApiMessage("Verify")
+    public ResponseEntity<Void> verify(@RequestHeader String email, @Valid @RequestBody RequestVerify request) {
+        authenticationService.verify(email, request.otp());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/resend-verify")
+    @ApiMessage("Resend Verify")
+    public ResponseEntity<Void> resendOtp(@RequestHeader String email) {
+        verifyService.sendOtp(email);
         return ResponseEntity.ok().build();
     }
 }

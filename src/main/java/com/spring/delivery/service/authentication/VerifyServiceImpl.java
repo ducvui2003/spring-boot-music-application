@@ -15,25 +15,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VerifyServiceImpl implements VerifyService {
-	UserRepository userRepository;
-	RedisService<String> redisService;
-	OTPService otpService;
-	EmailService emailService;
+    UserRepository userRepository;
+    RedisService<String> redisService;
+    OTPService otpService;
+    EmailService emailService;
 
-	@Override
-	public boolean userIsVerify(String email) {
-		return redisService.hasKey(RedisUtil.generateKey(RedisNameSpace.OTP_EMAIL_COUNTER, email));
-	}
+    @Override
+    public boolean userIsVerify(String email) {
+        return redisService.hasKey(RedisUtil.generateKey(RedisNameSpace.OTP_EMAIL_COUNTER, email));
+    }
 
-	@Override
-	public void verifyOtp(String email, String otp) {
-		otpService.verifyOTP(RedisNameSpace.OTP_VERIFY_EMAIL, email, otp);
-		userRepository.updateVerifyStatusByEmail(email, true);
-	}
+    @Override
+    public void verifyOtp(String email, String otp) {
+        otpService.verifyOTP(RedisNameSpace.OTP_VERIFY_EMAIL, email, otp);
+        userRepository.updateVerifyStatusByEmail(email, true);
+    }
 
-	@Override
-	public void sendOtp(String email) {
-		String otp = otpService.createOPT(RedisNameSpace.OTP_VERIFY_EMAIL, email);
-		emailService.sentVerify(email, otp);
-	}
+    @Override
+    public void sendOtp(String email) {
+        var currentOtp = otpService.getOtp(RedisNameSpace.OTP_VERIFY_EMAIL, email);
+        if (currentOtp.isPresent()) return;
+        String otp = otpService.createOTP(RedisNameSpace.OTP_VERIFY_EMAIL, email);
+        emailService.sentVerify(email, otp);
+    }
 }

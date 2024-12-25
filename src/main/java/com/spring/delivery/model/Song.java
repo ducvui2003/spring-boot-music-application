@@ -21,7 +21,6 @@ public class Song extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "genre_id")
     Genre genre;
-    Long duration;
     @OneToOne
     Resource source;
     @OneToOne

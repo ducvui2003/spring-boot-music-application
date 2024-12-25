@@ -18,7 +18,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
     PostAuthenticationInterceptor postAuthenticationInterceptor;
     LimitForgotPasswordInterceptor limitForgotPasswordInterceptor;
     LimitVerifyInterceptor limitVerifyInterceptor;
-    RequestPhoneHeaderInterceptor requestPhoneHeaderInterceptor;
     RequestEmailHeaderInterceptor requestEmailHeaderInterceptor;
 
     @Override
@@ -26,11 +25,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(postAuthenticationInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(applicationProps.getWhitelist());
-//        PHONE
-        registry.addInterceptor(requestPhoneHeaderInterceptor)
-                .addPathPatterns("/api/v1/auth/verify", "/api/v1/auth/verify-resent");
+
         registry.addInterceptor(limitVerifyInterceptor)
                 .addPathPatterns("/api/v1/auth/verify", "/api/v1/auth/verify-resent");
+
 //        EMAIL
         registry.addInterceptor(requestEmailHeaderInterceptor)
                 .addPathPatterns("/api/v1/auth/password/forgot", "/api/v1/auth/password/reset", "/api/v1/auth/password/change-password");
