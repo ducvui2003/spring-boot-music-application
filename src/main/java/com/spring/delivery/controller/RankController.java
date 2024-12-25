@@ -7,20 +7,20 @@ import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.service.business.album.AlbumService;
 import com.spring.delivery.service.business.artist.ArtistService;
 import com.spring.delivery.service.business.song.SongService;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/filter")
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class FilterController {
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@RequestMapping("/api/v1/rank")
+public class RankController {
     ArtistService artistService;
     SongService songService;
     AlbumService albumService;

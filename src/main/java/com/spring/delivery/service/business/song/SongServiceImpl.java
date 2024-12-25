@@ -21,8 +21,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,7 @@ public class SongServiceImpl implements SongService {
     GenreRepository genreRepository;
     PageableUtil pageableUtil;
     CloudinaryService cloudinaryService;
+    ListeningHistoryRepository listeningHistoryRepository;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
@@ -57,6 +61,8 @@ public class SongServiceImpl implements SongService {
         if (song.isEmpty()) {
             throw new AppException("Song not found");
         }
+        ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        addSongHistory(userDTO.id(), song.get());
         return this.toSongResponse(song.get());
     }
 
@@ -141,5 +147,21 @@ public class SongServiceImpl implements SongService {
         String url = cloudinaryService.generateImage(song.getCover().getPublicId());
         responseSong.setCover(url);
         return responseSong;
+    }
+
+
+    @Override
+    public List<ResponseSongCard> getSongHistory(Long userId) {
+        List<ListeningHistory> histories = listeningHistoryRepository.findByUserId(userId);
+        List<Long> songIds = histories.stream().map(ListeningHistory::getId).collect(Collectors.toList());
+        Set<Song> songs = songRepository.findAllByIdIn(songIds);
+        return songs.stream().map(this::toSongResponseCard).collect(Collectors.toList());
+    }
+
+    private void addSongHistory(Long userId, Song song) {
+        ListeningHistory listeningHistory = new ListeningHistory();
+        listeningHistory.setSong(song);
+        listeningHistory.setUser(userRepository.findById(userId).orElseThrow(() -> new AppException("User not found")));
+        listeningHistoryRepository.save(listeningHistory);
     }
 }
