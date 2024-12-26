@@ -123,7 +123,13 @@ public class SongServiceImpl implements SongService {
     }
 
     private ResponseSong toSongResponse(Song song) {
+        ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        if (this.userRepository.findById(userDTO.id()).isEmpty()) {
+            throw new AppException(AppErrorCode.USER_NOT_FOUND);
+        }
+
         ResponseSong responseSong = songMapper.toSongResponse(song);
+        responseSong.setLike(song.getUsers().stream().filter(it -> it.getId() == userDTO.id()).findFirst().isPresent());
         //        public-id -> HLS URLs
         if (song.getSource() != null) {
             String url = cloudinaryService.generateHLS(song.getSource().getPublicId());

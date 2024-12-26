@@ -6,6 +6,7 @@ import com.spring.delivery.domain.request.RequestUpdateSong;
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.service.business.song.SongService;
+import com.spring.delivery.util.anotation.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -46,12 +47,14 @@ public class SongController {
     }
 
     @PostMapping("/like/{id}")
+    @ApiMessage("Like song successfully")
     public ResponseEntity<Void> likeSong(@PathVariable("id") Long id) {
         songService.likeSong(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/unlike/{id}")
+    @ApiMessage("Unlike song successfully")
     public ResponseEntity<Void> unlikeSong(@PathVariable("id") Long id) {
         songService.unlikeSong(id);
         return ResponseEntity.ok().build();
