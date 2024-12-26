@@ -32,7 +32,7 @@ public class PasswordServiceImpl implements PasswordService {
 
 	@Override
 	public void sendOtp(String email) {
-		String otp = otpService.createOPT(RedisNameSpace.OTP_RESET_PASSWORD, email);
+		String otp = otpService.createOTP(RedisNameSpace.OTP_RESET_PASSWORD, email);
 		emailService.sentResetPassword(email, otp);
 	}
 

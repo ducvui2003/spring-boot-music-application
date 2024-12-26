@@ -28,79 +28,83 @@ import lombok.experimental.NonFinal;
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class OTPServiceImpl implements OTPService {
-	RedisService<String> redisService;
-	OTPGenerator<String> charOTPGenerator;
+    RedisService<String> redisService;
+    OTPGenerator<String> charOTPGenerator;
 
-	@Value("${app.otp.max-try}")
-	@NonFinal
-	int maxTry;
+    @Value("${app.otp.max-try}")
+    @NonFinal
+    int maxTry;
 
-	@Value("${app.otp.expiration}")
-	@NonFinal
-	long timeout;
+    @Value("${app.otp.expiration}")
+    @NonFinal
+    long timeout;
 
-	@Value("${app.otp.length}")
-	@NonFinal
-	int length;
+    @Value("${app.otp.length}")
+    @NonFinal
+    int length;
 
-	@Value("${app.otp.resend.max-try}")
-	@NonFinal
-	int maxResend;
+    @Value("${app.otp.resend.max-try}")
+    @NonFinal
+    int maxResend;
 
-	@Value("${app.otp.resend.expiration}")
-	@NonFinal
-	int resendTime;
-
-
-	static int INIT_COUNTER = 1;
+    @Value("${app.otp.resend.expiration}")
+    @NonFinal
+    int resendTime;
 
 
-	public void verifyOTP(RedisNameSpace nameSpace, String email, String otp) {
-		String otpKey = RedisUtil.generateKey(nameSpace, email);
-		String verifyCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.VERIFY_COUNTER.getName(), email);
-
-		Optional<String> otpOptional = redisService.get(otpKey);
-		Optional<String> verifyCounterOptional = redisService.get(verifyCounterKey);
-
-		// TH: OTP không đúng
-		if (otpOptional.isEmpty() || verifyCounterOptional.isEmpty())
-			throw new AppException(AppErrorCode.OTP_NOT_MATCH);
-
-		// TH: Đã xác thực OTP quá số lần cho phép
-		if (Integer.parseInt(verifyCounterOptional.get()) > maxTry) throw new AppException(AppErrorCode.MAX_TRY);
-
-		if (!otpOptional.get().equals(otp)) {
-			redisService.increment(verifyCounterKey);
-			throw new AppException(AppErrorCode.OTP_NOT_MATCH);
-		}
-
-		String resendCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.RESEND_COUNTER.getName(), email);
-		// Xóa OTP và số lần nhập OTP trong redis
-		redisService.delete(otpKey);
-		redisService.delete(verifyCounterKey);
-		redisService.delete(resendCounterKey);
-	}
-
-	@Override
-	public String createOPT(RedisNameSpace nameSpace, String email) {
-		String code = charOTPGenerator.generateOTP(length);
-		String optKey = RedisUtil.generateKey(nameSpace, email);
-		String verifyCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.VERIFY_COUNTER.getName(), email);
-		String resendOptCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.RESEND_COUNTER.getName(), email);
-		Optional<String> resendCouterOptional = redisService.get(resendOptCounterKey);
-		if (redisService.hasKey(optKey) && resendCouterOptional.isPresent()) {
-			int counter = Integer.parseInt(resendCouterOptional.get());
-			if (counter > maxResend) throw new AppException(AppErrorCode.MAX_TRY);
-
-			redisService.increment(resendOptCounterKey);
-		}else{
-			redisService.set(resendOptCounterKey, String.valueOf(INIT_COUNTER), resendTime);
-		}
-
-		redisService.set(optKey, code, timeout);
-		redisService.set(verifyCounterKey, String.valueOf(INIT_COUNTER), resendTime);
-		return code;
-	}
+    static int INIT_COUNTER = 1;
 
 
+    public void verifyOTP(RedisNameSpace nameSpace, String email, String otp) {
+        String otpKey = RedisUtil.generateKey(nameSpace, email);
+        String verifyCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.VERIFY_COUNTER.getName(), email);
+
+        Optional<String> otpOptional = redisService.get(otpKey);
+        Optional<String> verifyCounterOptional = redisService.get(verifyCounterKey);
+
+        // TH: OTP không đúng
+        if (otpOptional.isEmpty() || verifyCounterOptional.isEmpty())
+            throw new AppException(AppErrorCode.OTP_NOT_MATCH);
+
+        // TH: Đã xác thực OTP quá số lần cho phép
+        if (Integer.parseInt(verifyCounterOptional.get()) > maxTry) throw new AppException(AppErrorCode.MAX_TRY);
+
+        if (!otpOptional.get().equals(otp)) {
+            redisService.increment(verifyCounterKey);
+            throw new AppException(AppErrorCode.OTP_NOT_MATCH);
+        }
+
+        String resendCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.RESEND_COUNTER.getName(), email);
+        // Xóa OTP và số lần nhập OTP trong redis
+        redisService.delete(otpKey);
+        redisService.delete(verifyCounterKey);
+        redisService.delete(resendCounterKey);
+    }
+
+    @Override
+    public String createOTP(RedisNameSpace nameSpace, String email) {
+        String code = charOTPGenerator.generateOTP(length);
+        String optKey = RedisUtil.generateKey(nameSpace, email);
+        String verifyCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.VERIFY_COUNTER.getName(), email);
+        String resendOptCounterKey = RedisUtil.generateKey(nameSpace, RedisNameSpace.RESEND_COUNTER.getName(), email);
+        Optional<String> resendCouterOptional = redisService.get(resendOptCounterKey);
+        if (redisService.hasKey(optKey) && resendCouterOptional.isPresent()) {
+            int counter = Integer.parseInt(resendCouterOptional.get());
+            if (counter > maxResend) throw new AppException(AppErrorCode.MAX_TRY);
+
+            redisService.increment(resendOptCounterKey);
+        } else {
+            redisService.set(resendOptCounterKey, String.valueOf(INIT_COUNTER), resendTime);
+        }
+
+        redisService.set(optKey, code, timeout);
+        redisService.set(verifyCounterKey, String.valueOf(INIT_COUNTER), resendTime);
+        return code;
+    }
+
+    @Override
+    public Optional<String> getOtp(RedisNameSpace redisNameSpace, String email) {
+        String optKey = RedisUtil.generateKey(redisNameSpace, email);
+        return redisService.get(optKey);
+    }
 }

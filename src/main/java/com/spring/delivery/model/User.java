@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class User extends BaseModel {
     String fullName;
 
     boolean sex;
-    Date birthDay;
+    LocalDate birthday;
 
     boolean verified;
 
