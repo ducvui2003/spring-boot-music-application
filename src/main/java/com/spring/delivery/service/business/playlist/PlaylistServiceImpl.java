@@ -108,10 +108,10 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         playlist.getSongs().remove(song);
-        if (playlist.getSongs().isEmpty()) {
-            playlistRepository.deleteById(id);
-            return;
-        }
+//        if (playlist.getSongs().isEmpty()) {
+//            playlistRepository.deleteById(id);
+//            return;
+//        }
         playlistRepository.save(playlist);
     }
 
