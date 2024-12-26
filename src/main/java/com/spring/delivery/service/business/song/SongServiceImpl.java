@@ -38,6 +38,7 @@ public class SongServiceImpl implements SongService {
     GenreRepository genreRepository;
     PageableUtil pageableUtil;
     CloudinaryService cloudinaryService;
+    ListeningHistoryRepository listeningHistoryRepository;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
@@ -54,9 +55,18 @@ public class SongServiceImpl implements SongService {
     @Override
     public ResponseSong getSongDetail(Long id) {
         Optional<Song> song = songRepository.findById(id);
+        ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        if (this.userRepository.findById(userDTO.id()).isEmpty()) {
+            throw new AppException(AppErrorCode.USER_NOT_FOUND);
+        }
         if (song.isEmpty()) {
             throw new AppException("Song not found");
         }
+        listeningHistoryRepository.save(ListeningHistory.builder()
+                .user(new User() {{
+                    setId(userDTO.id());
+                }})
+                .song(song.get()).build());
         return this.toSongResponse(song.get());
     }
 
