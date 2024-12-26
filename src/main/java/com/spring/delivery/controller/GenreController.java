@@ -31,13 +31,11 @@ public class GenreController {
     GenreService genreService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<ApiPaging<ResponseGenre>>> getGenres(@RequestParam(defaultValue = "1") int page,
-                                                                           @RequestParam(defaultValue = "10") int size,
-                                                                           @RequestParam(defaultValue = "id") String sortBy) {
+    public ResponseEntity<ApiPaging<ResponseGenre>> getGenres(@RequestParam(defaultValue = "1") int page,
+                                                              @RequestParam(defaultValue = "10") int size,
+                                                              @RequestParam(defaultValue = "id") String sortBy) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortBy));
-        return ResponseEntity.ok(ApiResponse.<ApiPaging<ResponseGenre>>builder()
-                .data(genreService.getGenres(pageable))
-                .build());
+        return ResponseEntity.ok(genreService.getGenres(pageable));
     }
 
     @PostMapping
