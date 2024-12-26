@@ -1,12 +1,10 @@
 package com.spring.delivery.controller;
 
 import com.spring.delivery.domain.ApiPaging;
-import com.spring.delivery.domain.response.ResponseAlbumCard;
-import com.spring.delivery.domain.response.ResponseArtistCard;
-import com.spring.delivery.domain.response.ResponseAuthentication;
-import com.spring.delivery.domain.response.ResponseSongCard;
+import com.spring.delivery.domain.response.*;
 import com.spring.delivery.service.business.album.AlbumService;
 import com.spring.delivery.service.business.artist.ArtistService;
+import com.spring.delivery.service.business.playlist.PlaylistService;
 import com.spring.delivery.service.business.song.SongService;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.exception.AppErrorCode;
@@ -22,7 +20,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -33,11 +33,18 @@ public class HomeController {
     SecurityUtil securityUtil;
     SongService songService;
     AlbumService albumService;
+    PlaylistService playlistService;
 
-    @GetMapping("/song")
-    public ResponseEntity<List<ResponseSongCard>> getPopularMusic() {
+    @GetMapping("/playlist")
+    public ResponseEntity<List<ResponsePlaylistCard>> getPlayList() {
         PageRequest pageable = PageRequest.of(0, 5);
-        List<ResponseSongCard> data = songService.getSongCardPopular(pageable).getContent();
+        Optional<ResponseAuthentication.UserDTO> userDTOOptional = securityUtil.getCurrentUserDTO();
+        List<ResponsePlaylistCard> data;
+        if (userDTOOptional.isPresent()) {
+            data = playlistService.getPlayList(pageable).getContent();
+        } else {
+            data = playlistService.getPlayListNonAuth(pageable).getContent();
+        }
         return ResponseEntity.ok(data);
     }
 

@@ -33,12 +33,13 @@ public class ResponseAuthentication {
 
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record UserDTO(long id, String email, String fullName) {
+    public record UserDTO(long id, String email, String fullName, String avatar) {
         public static UserDTO initFromMapInfoUserDTO(Map<String, Object> mapUser) {
             return UserDTO.builder()
                     .id((Long) mapUser.get("id"))
                     .email((String) mapUser.get("email"))
                     .fullName((String) mapUser.get("fullName"))
+                    .avatar((String) mapUser.get("avatar"))
                     .build();
         }
     }
