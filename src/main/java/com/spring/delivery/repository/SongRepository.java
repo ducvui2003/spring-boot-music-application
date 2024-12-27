@@ -2,6 +2,7 @@ package com.spring.delivery.repository;
 
 import com.spring.delivery.model.Playlist;
 import com.spring.delivery.model.Song;
+import com.spring.delivery.model.User;
 import feign.Param;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM User u WHERE u.id = :userId AND :songId MEMBER OF u.songs")
+    @Query(value = "DELETE FROM favorites f WHERE f.user_id = :userId AND f.song_id = :songId", nativeQuery = true)
     void removeSongFromFavoriteIfExists(@Param("userId") long userId, @Param("songId") Long songId);
 
     List<Song> findAll();

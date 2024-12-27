@@ -15,6 +15,7 @@ public interface SongMapper {
     @Mapping(target = "artist", source = "artist.name")
     @Mapping(target = "genre", source = "genre.name")
     @Mapping(target = "cover", ignore = true)
+    @Mapping(target = "like", ignore = true)
     ResponseSong toSongResponse(Song song);
 
     @Mapping(target = "artist", source = "artist.name")

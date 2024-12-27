@@ -1,7 +1,6 @@
 package com.spring.delivery.repository;
 
 import com.spring.delivery.model.ListeningHistory;
-import com.spring.delivery.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,6 +21,4 @@ public interface ListeningHistoryRepository extends JpaRepository<ListeningHisto
             ORDER BY h.created_at DESC;
             """, nativeQuery = true)
     List<ListeningHistory> findByUserId(Long userId);
-
-
 }
