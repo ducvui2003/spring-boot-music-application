@@ -19,4 +19,5 @@ public class ResponseSong {
     String artist;
     String url;
     String genre;
+    boolean like;
 }

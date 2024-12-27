@@ -21,4 +21,6 @@ public interface PlaylistService {
     ApiPaging<ResponsePlaylistCard> getPlayList(Pageable pageable);
 
     ResponsePlaylistDetail getPlayListDetail(Long id, Pageable pageable);
+
+    ResponsePlaylistDetail getFavoriteSongs(Pageable pageable);
 }

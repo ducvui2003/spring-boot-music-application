@@ -13,6 +13,7 @@ import com.spring.delivery.model.Song;
 import com.spring.delivery.model.User;
 import com.spring.delivery.repository.PlaylistRepository;
 import com.spring.delivery.repository.SongRepository;
+import com.spring.delivery.repository.UserRepository;
 import com.spring.delivery.service.cloudinary.CloudinaryService;
 import com.spring.delivery.util.PageableUtil;
 import com.spring.delivery.util.SecurityUtil;
@@ -26,10 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -43,6 +41,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     PageableUtil pageableUtil;
     SecurityUtil securityUtil;
     CloudinaryService cloudinaryService;
+    UserRepository userRepository;
 
     @Override
     public ResponsePlaylistCreated createPlaylist(RequestPlaylistCreated request) {
@@ -108,10 +107,10 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         playlist.getSongs().remove(song);
-        if (playlist.getSongs().isEmpty()) {
-            playlistRepository.deleteById(id);
-            return;
-        }
+//        if (playlist.getSongs().isEmpty()) {
+//            playlistRepository.deleteById(id);
+//            return;
+//        }
         playlistRepository.save(playlist);
     }
 
@@ -170,10 +169,40 @@ public class PlaylistServiceImpl implements PlaylistService {
         return response;
     }
 
+    @Override
+    public ResponsePlaylistDetail getFavoriteSongs(Pageable pageable) {
+        var user = securityUtil.getCurrentUserDTO();
+        if (user.isEmpty())
+            throw new AppException(AppErrorCode.UNAUTHORIZED);
+
+        var id = user.get().id();
+        var playlist = Optional.of(new Playlist() {{
+            setId((long) -999);
+            setName("My favorites");
+            setSongs(new HashSet<>(userRepository.findById(id).get().getSongs()));
+        }});
+        var response = playListMapper.toPlaylistDetailResponse(playlist.orElseThrow(() -> new AppException(AppErrorCode.NOT_FOUND)));
+        setPlaylistCoverUrl(response, List.of(playlist.get()));
+        var songs = playlist.get().getSongs().stream().skip((long) pageable.getPageNumber() * pageable.getPageSize()).limit(pageable.getPageSize()).map(this::toSongResponseCard).toList();
+        var totalPage = playlist.get().getSongs().size() / pageable.getPageSize();
+        response.setSongs(ApiPaging.<ResponseSongCard>builder()
+                .content(songs)
+                .totalPages(totalPage + 1)
+                .isLast(pageable.getPageNumber() == totalPage)
+                .isFirst(pageable.getPageNumber() == 0)
+                .currentPage(pageable.getPageNumber())
+                .size(pageable.getPageSize())
+                .totalItems(songs.size())
+                .build());
+        return response;
+    }
+
     private ResponseSongCard toSongResponseCard(Song song) {
         ResponseSongCard responseSong = songMapper.toSongCardResponse(song);
         String url = cloudinaryService.generateImage(song.getCover().getPublicId());
         responseSong.setCover(url);
         return responseSong;
     }
+
+
 }

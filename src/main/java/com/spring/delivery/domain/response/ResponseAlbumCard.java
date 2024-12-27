@@ -12,8 +12,9 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseAlbumCard {
+    long id;
     String name;
     String artist;
-    String cover;
+    String coverUrl;
     Instant releaseDate;
 }
