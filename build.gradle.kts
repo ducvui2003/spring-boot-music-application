@@ -45,7 +45,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
@@ -78,22 +77,6 @@ dependencyManagement {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
     }
 }
-//spotless {
-//    java {
-//        // Target only Java files in src/main/java
-//        target("src/main/java/**/*.java");
-////        palantirJavaFormat();
-//        removeUnusedImports();
-//        toggleOffOn();
-//        trimTrailingWhitespace();
-//        indentWithTabs(4);
-//        importOrder("java", "javax", "org", "com", "com.diffplug");
-//    }
-//}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
 tasks.withType<BootJar> {
-    mainClass.set("com.spring.delivery.SpringMusicApplication");
+    mainClass.set("com.spring.delivery.SpringMusicPlayer");
 }

@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResponseGenre {
-    String id;
+    Integer id;
     String name;
     String description;
     String cover;

@@ -87,6 +87,7 @@ app:
     - /auth/google
     - /upload
     - /api/v1/filter/**
+    - /api/v1/status
   cookie:
     key:
       refreshToken: refresh_token

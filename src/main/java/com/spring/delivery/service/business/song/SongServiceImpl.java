@@ -21,9 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,24 +58,19 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public ResponseSong getSongDetail(Long id) {
-        Optional<Song> song = songRepository.findById(id);
+        Optional<Song> optionalSong = songRepository.findById(id);
         ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
         if (this.userRepository.findById(userDTO.id()).isEmpty()) {
             throw new AppException(AppErrorCode.USER_NOT_FOUND);
         }
-        if (song.isEmpty()) {
+        if (optionalSong.isEmpty()) {
             throw new AppException("Song not found");
         }
-        var s = song.get();
-        listeningHistoryRepository.save(ListeningHistory.builder()
-                .user(new User() {{
-                    setId(userDTO.id());
-                }})
-                .song(s).build());
-
-        s.setViews(s.getViews().add(BigInteger.valueOf(1)));
-        this.songRepository.save(s);
-        return this.toSongResponse(song.get());
+        var song = optionalSong.get();
+        song.setViews(song.getViews().add(BigInteger.valueOf(1)));
+        this.songRepository.save(song);
+        addSongHistory(userDTO.id(), song);
+        return this.toSongResponse(song);
     }
 
     @Override
@@ -162,5 +160,21 @@ public class SongServiceImpl implements SongService {
         String url = cloudinaryService.generateImage(song.getCover().getPublicId());
         responseSong.setCover(url);
         return responseSong;
+    }
+
+
+    @Override
+    public List<ResponseSongCard> getSongHistory(Long userId) {
+        List<ListeningHistory> histories = listeningHistoryRepository.findByUserId(userId);
+        List<Long> songIds = histories.stream().map(ListeningHistory::getId).collect(Collectors.toList());
+        Set<Song> songs = songRepository.findAllByIdIn(songIds);
+        return songs.stream().map(this::toSongResponseCard).collect(Collectors.toList());
+    }
+
+    private void addSongHistory(Long userId, Song song) {
+        ListeningHistory listeningHistory = new ListeningHistory();
+        listeningHistory.setSong(song);
+        listeningHistory.setUser(userRepository.findById(userId).orElseThrow(() -> new AppException("User not found")));
+        listeningHistoryRepository.save(listeningHistory);
     }
 }

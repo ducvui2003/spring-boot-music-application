@@ -7,6 +7,8 @@ import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface SongService {
     ApiPaging<ResponseSongCard> getSongCard(Pageable pageable);
 
@@ -25,4 +27,6 @@ public interface SongService {
     ResponseSong createSong(RequestCreateSong request);
 
     ResponseSong updateSong(Long id, RequestUpdateSong request);
+
+    List<ResponseSongCard> getSongHistory(Long userId);
 }

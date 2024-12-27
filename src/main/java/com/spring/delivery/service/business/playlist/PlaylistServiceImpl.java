@@ -136,6 +136,16 @@ public class PlaylistServiceImpl implements PlaylistService {
         return response;
     }
 
+    @Override
+    public ApiPaging<ResponsePlaylistCard> getPlayListNonAuth(Pageable pageable) {
+        Page<Playlist> page = playlistRepository.findAll(pageable);
+        var response = pageableUtil.handlePaging(page, playListMapper::toPlaylistCardResponse);
+
+        response.getContent().forEach(pl -> setPlaylistCoverUrl(pl, page.getContent()));
+
+        return response;
+    }
+
     private void setPlaylistCoverUrl(ResponsePlaylistCard pl, List<Playlist> playlists) {
         if (pl.getCoverUrl() != null && !pl.getCoverUrl().isEmpty()) return;
         var optionalPlaylist = playlists.stream().filter(p -> Objects.equals(p.getId(), pl.getId())).findFirst();
