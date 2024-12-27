@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,11 +63,15 @@ public class SongServiceImpl implements SongService {
         if (song.isEmpty()) {
             throw new AppException("Song not found");
         }
+        var s = song.get();
         listeningHistoryRepository.save(ListeningHistory.builder()
                 .user(new User() {{
                     setId(userDTO.id());
                 }})
-                .song(song.get()).build());
+                .song(s).build());
+
+        s.setViews(s.getViews().add(BigInteger.valueOf(1)));
+        this.songRepository.save(s);
         return this.toSongResponse(song.get());
     }
 

@@ -28,7 +28,7 @@ public class AlbumServiceImpl implements AlbumService {
         Page<Album> page = albumRepository.findTopAlbums(pageable);
         ApiPaging<ResponseAlbumCard> apiPaging = pageableUtil.handlePaging(page, entity -> {
             ResponseAlbumCard response = albumMapper.toResponseAlbumCard(entity);
-            if (entity.getArtist().getAlbums() != null) {
+            if (entity.getCover() != null) {
                 response.setCover(cloudinaryService.generateImage(entity.getCover().getPublicId()));
             }
             return response;

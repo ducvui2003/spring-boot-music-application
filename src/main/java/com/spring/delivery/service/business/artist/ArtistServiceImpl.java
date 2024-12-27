@@ -37,7 +37,7 @@ public class ArtistServiceImpl implements ArtistService {
         }
 
         ResponseArtistCard responseArtistCard = artistMapper.toArtistCardResponse(artist);
-        if (artist.getAvatar() == null) {
+        if (artist.getAvatar() != null) {
             String url = cloudinaryService.generateImage(artist.getAvatar().getPublicId());
             responseArtistCard.setAvatar(url);
         }
