@@ -6,6 +6,7 @@ import com.spring.delivery.domain.response.ResponsePlaylistCard;
 import com.spring.delivery.domain.response.ResponsePlaylistCreated;
 import com.spring.delivery.domain.response.ResponsePlaylistDetail;
 import com.spring.delivery.service.business.playlist.PlaylistService;
+import com.spring.delivery.service.business.song.SongService;
 import com.spring.delivery.util.anotation.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/playlist")
 public class PlaylistController {
     PlaylistService playlistService;
+    SongService songService;
 
     @GetMapping()
     @ApiMessage("Get success")
@@ -33,6 +35,8 @@ public class PlaylistController {
     @GetMapping("/{id}")
     @ApiMessage("Get success")
     public ResponseEntity<ResponsePlaylistDetail> getPlaylistDetail(@PathVariable("id") Long id, @PageableDefault(sort = "id") Pageable pageable) {
+        if (id == -999)
+            return ResponseEntity.ok().body(playlistService.getFavoriteSongs(pageable));
         return ResponseEntity.ok().body(playlistService.getPlayListDetail(id, pageable));
     }
 
@@ -46,7 +50,8 @@ public class PlaylistController {
     @ApiMessage("Add song success")
     public ResponseEntity<Void> addSongToPlaylist(
             @PathVariable Long id, @PathVariable Long songId) {
-        playlistService.addSongToPlaylist(id, songId);
+        if (id == -999) songService.likeSong(songId);
+        else playlistService.addSongToPlaylist(id, songId);
         return ResponseEntity.ok().build();
     }
 
@@ -54,7 +59,8 @@ public class PlaylistController {
     @ApiMessage("delete song success")
     public ResponseEntity<Void> removeSongToPlaylist(
             @PathVariable Long id, @PathVariable Long songId) {
-        playlistService.removeSongFromPlaylist(id, songId);
+        if (id == -999) songService.unlikeSong(songId);
+        else playlistService.removeSongFromPlaylist(id, songId);
         return ResponseEntity.ok().build();
     }
 

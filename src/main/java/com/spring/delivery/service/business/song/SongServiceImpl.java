@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,11 +59,22 @@ public class SongServiceImpl implements SongService {
     @Override
     public ResponseSong getSongDetail(Long id) {
         Optional<Song> song = songRepository.findById(id);
+        ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        if (this.userRepository.findById(userDTO.id()).isEmpty()) {
+            throw new AppException(AppErrorCode.USER_NOT_FOUND);
+        }
         if (song.isEmpty()) {
             throw new AppException("Song not found");
         }
-        ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
-        addSongHistory(userDTO.id(), song.get());
+        var s = song.get();
+        listeningHistoryRepository.save(ListeningHistory.builder()
+                .user(new User() {{
+                    setId(userDTO.id());
+                }})
+                .song(s).build());
+
+        s.setViews(s.getViews().add(BigInteger.valueOf(1)));
+        this.songRepository.save(s);
         return this.toSongResponse(song.get());
     }
 
@@ -129,7 +141,13 @@ public class SongServiceImpl implements SongService {
     }
 
     private ResponseSong toSongResponse(Song song) {
+        ResponseAuthentication.UserDTO userDTO = securityUtil.getCurrentUserDTO().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        if (this.userRepository.findById(userDTO.id()).isEmpty()) {
+            throw new AppException(AppErrorCode.USER_NOT_FOUND);
+        }
+
         ResponseSong responseSong = songMapper.toSongResponse(song);
+        responseSong.setLike(song.getUsers().stream().filter(it -> it.getId() == userDTO.id()).findFirst().isPresent());
         //        public-id -> HLS URLs
         if (song.getSource() != null) {
             String url = cloudinaryService.generateHLS(song.getSource().getPublicId());
