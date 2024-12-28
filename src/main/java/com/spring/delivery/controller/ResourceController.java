@@ -31,7 +31,7 @@ public class ResourceController {
 
     @PostMapping("/signature-key")
     public ResponseEntity<ResponseSignature> getSignature(@RequestBody RequestSignature request) {
-        return ResponseEntity.ok().body(cloudinaryService.getSignature(request.getPublicId(), Tag.AUDIO));
+        return ResponseEntity.ok().body(cloudinaryService.getSignature(request.getPublicId(), request.getTag()));
     }
 
     @PostMapping("/create")

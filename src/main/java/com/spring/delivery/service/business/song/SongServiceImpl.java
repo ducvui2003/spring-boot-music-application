@@ -166,7 +166,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public List<ResponseSongCard> getSongHistory(Long userId) {
         List<ListeningHistory> histories = listeningHistoryRepository.findByUserId(userId);
-        List<Long> songIds = histories.stream().map(ListeningHistory::getId).collect(Collectors.toList());
+        List<Long> songIds = histories.stream().map(item -> item.getSong().getId()).collect(Collectors.toList());
         Set<Song> songs = songRepository.findAllByIdIn(songIds);
         return songs.stream().map(this::toSongResponseCard).collect(Collectors.toList());
     }

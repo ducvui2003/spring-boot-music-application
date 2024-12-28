@@ -115,7 +115,6 @@ public class SecurityUtil {
                 .subject(jwtPayload.getEmail())
                 .claim("user", jwtPayload.getUser())
                 .claim("role", jwtPayload.getRole())
-                .claim("permissions", jwtPayload.getPermissions())
                 .build();
     }
 
