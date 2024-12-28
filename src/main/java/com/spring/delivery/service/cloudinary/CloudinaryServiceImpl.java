@@ -53,12 +53,13 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                 "timestamp", timestamp,
                 "folder", folder);
         String signature = cloudinary.apiSignRequest(params, cloudinary.config.apiSecret);
+        String resourceType = Tag.AUDIO == tag ? "video" : "image";
         return ResponseSignature.builder()
                 .apiKey(cloudinary.config.apiKey)
                 .folder(folder)
                 .signature(signature)
                 .timestamp(timestamp)
-                .resourceType("video")
+                .resourceType(resourceType)
                 .type("upload")
                 .publicId(publicId)
                 .build();

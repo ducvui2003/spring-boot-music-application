@@ -18,6 +18,7 @@ import com.spring.delivery.repository.GenreRepository;
 import com.spring.delivery.repository.ResourceRepository;
 import com.spring.delivery.repository.SongRepository;
 import com.spring.delivery.service.cloudinary.CloudinaryService;
+import com.spring.delivery.util.PageableUtil;
 import com.spring.delivery.util.exception.AppException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class GenreServiceImpl implements GenreService {
     SongRepository songRepository;
     ResourceRepository resourceRepository;
     CloudinaryService cloudinaryService;
+    PageableUtil pageableUtil;
 
     @Override
     public ApiPaging<ResponseGenre> getGenres(Pageable pageable) {
@@ -47,18 +49,7 @@ public class GenreServiceImpl implements GenreService {
         if (page.isEmpty()) {
             throw new AppException("No genres found");
         }
-        List<ResponseGenre> data = page.getContent().stream()
-                .map(this::toGenreResponse)
-                .toList();
-        return ApiPaging.<ResponseGenre>builder()
-                .size(page.getSize())
-                .currentPage(page.getNumber())
-                .isFirst(page.isFirst())
-                .isLast(page.isLast())
-                .content(data)
-                .totalItems(page.getTotalElements())
-                .totalPages(page.getTotalPages())
-                .build();
+        return pageableUtil.handlePaging(page, this::toGenreResponse);
     }
 
     @Override
