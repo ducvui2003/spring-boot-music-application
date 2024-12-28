@@ -183,7 +183,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         var id = user.get().id();
         var playlist = Optional.of(new Playlist() {{
-            setId((long) -999);
             setName("My favorites");
             setSongs(new HashSet<>(userRepository.findById(id).get().getSongs()));
         }});
