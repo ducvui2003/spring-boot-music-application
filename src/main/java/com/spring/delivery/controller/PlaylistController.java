@@ -32,12 +32,16 @@ public class PlaylistController {
         return ResponseEntity.ok().body(playlistService.getPlayList(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     @ApiMessage("Get success")
     public ResponseEntity<ResponsePlaylistDetail> getPlaylistDetail(@PathVariable("id") Long id, @PageableDefault(sort = "id") Pageable pageable) {
-        if (id == -999)
-            return ResponseEntity.ok().body(playlistService.getFavoriteSongs(pageable));
         return ResponseEntity.ok().body(playlistService.getPlayListDetail(id, pageable));
+    }
+
+    @GetMapping("/favorite")
+    @ApiMessage("Get success")
+    public ResponseEntity<ResponsePlaylistDetail> getFavorite(@PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getFavoriteSongs(pageable));
     }
 
     @PostMapping()
@@ -50,8 +54,7 @@ public class PlaylistController {
     @ApiMessage("Add song success")
     public ResponseEntity<Void> addSongToPlaylist(
             @PathVariable Long id, @PathVariable Long songId) {
-        if (id == -999) songService.likeSong(songId);
-        else playlistService.addSongToPlaylist(id, songId);
+        playlistService.addSongToPlaylist(id, songId);
         return ResponseEntity.ok().build();
     }
 
@@ -59,8 +62,7 @@ public class PlaylistController {
     @ApiMessage("delete song success")
     public ResponseEntity<Void> removeSongToPlaylist(
             @PathVariable Long id, @PathVariable Long songId) {
-        if (id == -999) songService.unlikeSong(songId);
-        else playlistService.removeSongFromPlaylist(id, songId);
+        playlistService.removeSongFromPlaylist(id, songId);
         return ResponseEntity.ok().build();
     }
 
@@ -69,5 +71,14 @@ public class PlaylistController {
     public ResponseEntity<Void> deletePlaylist(@PathVariable Long id) {
         playlistService.deletePlaylist(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/playlist-to-add-song")
+    @ApiMessage("Get success")
+    public ResponseEntity<ApiPaging<ResponsePlaylistCard>> getPlaylistNotHasSong(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam("id") long id,
+            @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getPlaylistNotHasSong(name, id, pageable));
     }
 }
