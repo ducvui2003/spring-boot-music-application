@@ -70,4 +70,13 @@ public class PlaylistController {
         playlistService.deletePlaylist(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/add")
+    @ApiMessage("Get success")
+    public ResponseEntity<ApiPaging<ResponsePlaylistCard>> getPlaylistNotHasSong(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam("id") long id,
+            @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getPlaylistNotHasSong(name, id, pageable));
+    }
 }

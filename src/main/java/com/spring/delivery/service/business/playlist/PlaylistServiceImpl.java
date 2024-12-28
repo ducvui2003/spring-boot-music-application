@@ -107,10 +107,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         playlist.getSongs().remove(song);
-//        if (playlist.getSongs().isEmpty()) {
-//            playlistRepository.deleteById(id);
-//            return;
-//        }
         playlistRepository.save(playlist);
     }
 
@@ -204,6 +200,25 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .size(pageable.getPageSize())
                 .totalItems(songs.size())
                 .build());
+        return response;
+    }
+
+    @Override
+    public ApiPaging<ResponsePlaylistCard> getPlaylistNotHasSong(String name, long id, Pageable pageable) {
+        var user = securityUtil.getCurrentUserDTO();
+        if (user.isEmpty())
+            throw new AppException(AppErrorCode.UNAUTHORIZED);
+
+        Page<Playlist> page = playlistRepository.findByNameLikeAndUser_IdAndSongsNotContains(
+                "%" + name + "%",
+                user.get().id()
+                , new Song() {{
+                    setId(id);
+                }}, pageable);
+        var response = pageableUtil.handlePaging(page, playListMapper::toPlaylistCardResponse);
+
+        response.getContent().forEach(pl -> setPlaylistCoverUrl(pl, page.getContent()));
+
         return response;
     }
 
