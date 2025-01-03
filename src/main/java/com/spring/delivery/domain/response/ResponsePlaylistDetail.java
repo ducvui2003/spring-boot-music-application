@@ -21,4 +21,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ResponsePlaylistDetail extends ResponsePlaylistCard {
     ApiPaging<ResponseSongCard> songs;
+    List<Long> AllSongId;
 }

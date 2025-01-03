@@ -21,9 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,6 +42,7 @@ public class SongServiceImpl implements SongService {
     PageableUtil pageableUtil;
     CloudinaryService cloudinaryService;
     ListeningHistoryRepository listeningHistoryRepository;
+    FavoriteRepository favoriteRepository;
 
     @Override
     public ApiPaging<ResponseSongCard> getSongCard(Pageable pageable) {
@@ -92,7 +92,15 @@ public class SongServiceImpl implements SongService {
         if (this.userRepository.findById(userDTO.id()).isEmpty()) {
             throw new AppException(AppErrorCode.USER_NOT_FOUND);
         }
-        this.songRepository.addSongToFavoriteIfExists(userDTO.id(), id);
+        var song = new Favorite();
+        song.setUser(new User() {{
+            setId(userDTO.id());
+        }});
+        song.setSong(new Song() {{
+            setId(id);
+        }});
+        if (favoriteRepository.existsBySong_Id(id)) return;
+        this.favoriteRepository.save(song);
     }
 
     @Override
@@ -101,7 +109,7 @@ public class SongServiceImpl implements SongService {
         if (this.userRepository.findById(userDTO.id()).isEmpty()) {
             throw new AppException(AppErrorCode.USER_NOT_FOUND);
         }
-        this.songRepository.removeSongFromFavoriteIfExists(userDTO.id(), id);
+        this.favoriteRepository.removeBySong_IdAndUser_Id(id, userDTO.id());
     }
 
     @Override
@@ -142,8 +150,7 @@ public class SongServiceImpl implements SongService {
         }
 
         ResponseSong responseSong = songMapper.toSongResponse(song);
-        responseSong.setLike(song.getUsers().stream().filter(it -> it.getId() == userDTO.id()).findFirst().isPresent());
-        //        public-id -> HLS URLs
+        responseSong.setLike(favoriteRepository.findByIdAndUser_Id(song.getId(), userDTO.id()).isPresent());
         if (song.getSource() != null) {
             String url = cloudinaryService.generateHLS(song.getSource().getPublicId());
             responseSong.setUrl(url);

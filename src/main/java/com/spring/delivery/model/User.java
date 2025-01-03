@@ -63,4 +63,7 @@ public class User extends BaseModel {
 
     @ColumnDefault("false")
     boolean isPremium;
+
+    @OneToMany(mappedBy = "user")
+    Set<Favorite> favorites;
 }
