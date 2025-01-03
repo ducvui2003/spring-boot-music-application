@@ -177,4 +177,9 @@ public class SongServiceImpl implements SongService {
         listeningHistory.setUser(userRepository.findById(userId).orElseThrow(() -> new AppException("User not found")));
         listeningHistoryRepository.save(listeningHistory);
     }
+
+    @Override
+    public boolean deleteSong(Long id) {
+        return false;
+    }
 }

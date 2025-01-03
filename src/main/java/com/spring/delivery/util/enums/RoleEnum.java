@@ -9,6 +9,5 @@ package com.spring.delivery.util.enums;
 
 public enum RoleEnum {
     ADMIN,
-    USER,
-    SHIPPER
+    USER
 }

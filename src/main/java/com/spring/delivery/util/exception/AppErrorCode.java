@@ -1,6 +1,5 @@
 package com.spring.delivery.util.exception;
 
-import com.google.api.Http;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

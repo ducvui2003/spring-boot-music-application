@@ -3,6 +3,7 @@ package com.spring.delivery.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.delivery.util.enums.AuthType;
+import com.spring.delivery.util.enums.RoleEnum;
 import com.spring.delivery.util.enums.converter.AuthTypeConverter;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,10 +48,6 @@ public class User extends BaseModel {
     @Builder.Default
     AuthType authType = AuthType.USERNAME_PASSWORD;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    Role role;
-
     @OneToMany(mappedBy = "user")
     Set<Playlist> playlists;
 
@@ -63,4 +60,7 @@ public class User extends BaseModel {
 
     @ColumnDefault("false")
     boolean isPremium;
+
+    @Enumerated(EnumType.STRING)
+    RoleEnum role;
 }

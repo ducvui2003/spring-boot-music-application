@@ -64,7 +64,7 @@ public class AuthenticationController {
 
     // Sử dụng để client lấy lại data người dùng khi F5 trang
     // (người dùng đã login trước đó và cookie đã set refresh)
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SHIPPER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ApiMessage("Get info account")
     @GetMapping("/account")
     public ResponseEntity<ResponseAuthentication.UserGetAccount> getAccount() {

@@ -1,8 +1,8 @@
 package com.spring.delivery.service.authentication;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import org.springframework.stereotype.Service;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.spring.delivery.domain.request.RequestAuthorizationCode;
 import com.spring.delivery.domain.response.ResponseGoogleAuthorizationCode;
 import com.spring.delivery.domain.response.UserInfoGoogle;
