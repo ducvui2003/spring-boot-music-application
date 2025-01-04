@@ -64,15 +64,14 @@ public class AuthenticationController {
 
     // Sử dụng để client lấy lại data người dùng khi F5 trang
     // (người dùng đã login trước đó và cookie đã set refresh)
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SHIPPER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ApiMessage("Get info account")
     @GetMapping("/account")
     public ResponseEntity<ResponseAuthentication.UserGetAccount> getAccount() {
-        String email = SecurityUtil.getCurrentUserLogin().orElse("");
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.UNAUTHORIZED));
         User user = authenticationService.getUserByEmail(email);
         if (user == null)
             throw new AppException("Xử lý if else user trong hàm getAccount của AuthenticationController");
-
         ResponseAuthentication.UserDTO userDTO = userMapper.toUserDTO(user);
         return ResponseEntity.ok().body(new ResponseAuthentication.UserGetAccount(userDTO));
     }
@@ -83,7 +82,7 @@ public class AuthenticationController {
     public ResponseEntity<ResponseAuthentication> refreshAccessToken(@CookieValue(name = "refresh_token") String refreshToken) {
         securityUtil.validateRefreshToken(refreshToken);
         //  Check user by refresh authCode
-        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.USER_NOT_FOUND));
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new AppException(AppErrorCode.UNAUTHORIZED));
 
         ResponseAuthentication responseBody = authenticationService.getAccessToken(email);
 

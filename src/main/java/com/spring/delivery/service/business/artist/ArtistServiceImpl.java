@@ -14,6 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,16 +36,26 @@ public class ArtistServiceImpl implements ArtistService {
         return pageableUtil.handlePaging(page, this::toArtistCardResponse);
     }
 
+    @Override
+    public List<ResponseArtistCard> findByName(String name) {
+        return artistRepository.findAllByNameLike("%" + name + "%").stream().map(this::toArtistCardResponse).toList();
+    }
+
     private ResponseArtistCard toArtistCardResponse(Artist artist) {
         if (artist == null) {
             return null;
         }
 
         ResponseArtistCard responseArtistCard = artistMapper.toArtistCardResponse(artist);
-        if (artist.getAvatar() == null) {
+        if (artist.getAvatar() != null) {
             String url = cloudinaryService.generateImage(artist.getAvatar().getPublicId());
             responseArtistCard.setAvatar(url);
         }
         return responseArtistCard;
+    }
+
+    @Override
+    public List<String> getAllArtistName() {
+        return artistRepository.findAll().stream().map(Artist::getName).collect(Collectors.toList());
     }
 }

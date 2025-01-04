@@ -27,23 +27,14 @@ public class ResourceServiceImpl implements ResourceService {
     ResourceRepository resourceRepository;
 
     @Override
-    public ResponseResource createResource(RequestCreateResource resource) {
+    public Resource createResource(RequestCreateResource resource) {
         Resource savedResource = resourceRepository.save(Resource.builder()
                 .tag(resource.tag())
                 .name(resource.name())
                 .publicId(resource.publicId())
                 .build());
         resourceRepository.save(savedResource);
-        String url;
-        if (resource.tag().equals(Tag.AUDIO))
-            url = cloudinaryService.generateHLS(savedResource.getPublicId());
-        else
-            url = cloudinaryService.generateImage(resource.publicId());
-        return ResponseResource.builder()
-                .id(savedResource.getId())
-                .url(url)
-                .tag(savedResource.getTag())
-                .build();
+        return savedResource;
     }
 
     @Deprecated

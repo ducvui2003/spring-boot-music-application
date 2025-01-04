@@ -1,13 +1,12 @@
 package com.spring.delivery.mapper;
 
+import com.spring.delivery.domain.request.RequestRegister;
 import com.spring.delivery.domain.response.ResponseAuthentication;
 import com.spring.delivery.domain.response.ResponseUpdateInformation;
 import com.spring.delivery.model.JwtPayload;
+import com.spring.delivery.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import com.spring.delivery.domain.request.RequestRegister;
-import com.spring.delivery.model.User;
 
 
 @Mapper

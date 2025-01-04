@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.math.BigInteger;
 import java.util.Set;
@@ -16,7 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "songs")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Song extends BaseModel {
+public class Song extends BaseModel implements Comparable<Song> {
     String title;
     @ManyToOne
     @JoinColumn(name = "genre_id")
@@ -33,16 +35,24 @@ public class Song extends BaseModel {
     @ManyToMany(mappedBy = "songs")
     Set<Playlist> playlists;
 
-    @ManyToMany(mappedBy = "songs")
-    Set<User> users;
+    @OneToMany(mappedBy = "song")
+    Set<Favorite> favorites;
 
     @OneToMany(mappedBy = "song")
     Set<ListeningHistory> listeningHistories;
 
     @ColumnDefault("false")
-    boolean isPremium;
+    boolean isPremium = Boolean.FALSE;
 
     @ManyToOne
     @JoinColumn(name = "album_id")
     Album album;
+
+    @ColumnDefault("false")
+    boolean deleted = Boolean.FALSE;
+
+    @Override
+    public int compareTo(Song song) {
+        return Long.compare(this.getId(), song.getId());
+    }
 }

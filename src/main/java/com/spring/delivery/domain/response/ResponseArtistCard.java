@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseArtistCard {
+    long id;
     String name;
     String avatar;
 }

@@ -27,12 +27,10 @@ public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Coll
 
         // Custom logic to extract from "authorities" claim or "permissions" claim
         Collection<GrantedAuthority> authoritiesFromCustomClaim = extractAuthoritiesFromClaim(jwt, "role");
-        Collection<GrantedAuthority> permissionsFromCustomClaim = extractAuthoritiesFromClaim(jwt, "permissions");
 
         // Combine all authorities
         Set<GrantedAuthority> combinedAuthorities = new HashSet<>(grantedAuthorities);
         combinedAuthorities.addAll(authoritiesFromCustomClaim);
-        combinedAuthorities.addAll(permissionsFromCustomClaim);
 
         return combinedAuthorities;
     }

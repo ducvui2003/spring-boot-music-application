@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -27,8 +28,8 @@ public class UserDetailsCustom implements UserDetailsService {
         User user = authenticationService.getUserByEmail(username);
         if (user == null) throw new AppException(AppErrorCode.USER_NOT_FOUND);
 
-        Collection<GrantedAuthority> authorities = user.getRole().getPermissions().stream().map(permission ->
-                new SimpleGrantedAuthority(permission.getName())).collect(Collectors.toList());
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

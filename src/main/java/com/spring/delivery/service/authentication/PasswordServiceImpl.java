@@ -19,28 +19,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PasswordServiceImpl implements PasswordService {
-	OTPService otpService;
-	UserRepository userRepository;
-	PasswordEncoder passwordEncoder;
-	EmailService emailService;
+    OTPService otpService;
+    UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
+    EmailService emailService;
 
-	@Override
-	public void resetPassword(String otp, String email, String newPassword) {
-		otpService.verifyOTP(RedisNameSpace.OTP_RESET_PASSWORD, email, otp);
-		userRepository.updatePasswordByEmail(email, passwordEncoder.encode(newPassword));
-	}
+    @Override
+    public void resetPassword(String otp, String email, String newPassword) {
+        otpService.verifyOTP(RedisNameSpace.OTP_RESET_PASSWORD, email, otp);
+        userRepository.updatePasswordByEmail(email, passwordEncoder.encode(newPassword));
+    }
 
-	@Override
-	public void sendOtp(String email) {
-		String otp = otpService.createOTP(RedisNameSpace.OTP_RESET_PASSWORD, email);
-		emailService.sentResetPassword(email, otp);
-	}
+    @Override
+    public void sendOtp(String email) {
+        String otp = otpService.createOTP(RedisNameSpace.OTP_RESET_PASSWORD, email);
+        emailService.sentResetPassword(email, otp);
+    }
 
-	@Override
-	public void changePassword(String email, String oldPassword, String newPassword) {
-		Optional<User> user = userRepository.findByEmail(email);
-		if (user.isEmpty() || !passwordEncoder.matches(oldPassword, user.get().getPassword()))
-			throw new AppException(AppErrorCode.PASSWORD_NOT_MATCH);
-		userRepository.updatePasswordByEmail(email, passwordEncoder.encode(newPassword));
-	}
+    @Override
+    public void changePassword(String email, String oldPassword, String newPassword) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty() || !passwordEncoder.matches(oldPassword, user.get().getPassword()))
+            throw new AppException(AppErrorCode.PASSWORD_NOT_MATCH);
+        userRepository.updatePasswordByEmail(email, passwordEncoder.encode(newPassword));
+    }
 }

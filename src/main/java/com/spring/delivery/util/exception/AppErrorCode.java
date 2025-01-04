@@ -1,6 +1,5 @@
 package com.spring.delivery.util.exception;
 
-import com.google.api.Http;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +29,10 @@ public enum AppErrorCode {
     ERROR_OAUTH2(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error occurred during OAuth2 authentication"),
     USER_ALREADY_PREMIUM(HttpServletResponse.SC_BAD_REQUEST, "User has premium"),
     NOT_FOUND(HttpServletResponse.SC_NOT_FOUND, "Not found"),
-    FORBIDDEN(HttpServletResponse.SC_FORBIDDEN, "Forbidden"),;
+    FORBIDDEN(HttpServletResponse.SC_FORBIDDEN, "Forbidden"),
+    SONG_CREATION_FAILED(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Song creation failed"),
+    SONG_EXISTED(HttpServletResponse.SC_CONFLICT, "Song is already used"),
+    ;
 
     private int code;
     private String message;

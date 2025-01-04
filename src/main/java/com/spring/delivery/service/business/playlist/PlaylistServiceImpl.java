@@ -11,6 +11,7 @@ import com.spring.delivery.mapper.SongMapper;
 import com.spring.delivery.model.Playlist;
 import com.spring.delivery.model.Song;
 import com.spring.delivery.model.User;
+import com.spring.delivery.repository.FavoriteRepository;
 import com.spring.delivery.repository.PlaylistRepository;
 import com.spring.delivery.repository.SongRepository;
 import com.spring.delivery.service.cloudinary.CloudinaryService;
@@ -26,10 +27,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,6 +43,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     PageableUtil pageableUtil;
     SecurityUtil securityUtil;
     CloudinaryService cloudinaryService;
+    private final FavoriteRepository favoriteRepository;
 
     @Override
     public ResponsePlaylistCreated createPlaylist(RequestPlaylistCreated request) {
@@ -108,10 +109,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         playlist.getSongs().remove(song);
-        if (playlist.getSongs().isEmpty()) {
-            playlistRepository.deleteById(id);
-            return;
-        }
         playlistRepository.save(playlist);
     }
 
@@ -137,14 +134,24 @@ public class PlaylistServiceImpl implements PlaylistService {
         return response;
     }
 
-    private void setPlaylistCoverUrl(ResponsePlaylistCard pl, List<Playlist> playlists) {
-        if (pl.getCoverUrl() != null && !pl.getCoverUrl().isEmpty()) return;
-        var optionalPlaylist = playlists.stream().filter(p -> Objects.equals(p.getId(), pl.getId())).findFirst();
+    @Override
+    public ApiPaging<ResponsePlaylistCard> getPlayListNonAuth(Pageable pageable) {
+        Page<Playlist> page = playlistRepository.findAll(pageable);
+        var response = pageableUtil.handlePaging(page, playListMapper::toPlaylistCardResponse);
+
+        response.getContent().forEach(pl -> setPlaylistCoverUrl(pl, page.getContent()));
+
+        return response;
+    }
+
+    private void setPlaylistCoverUrl(ResponsePlaylistCard responsePlaylistCard, List<Playlist> playlists) {
+        if (responsePlaylistCard.getCoverUrl() != null && !responsePlaylistCard.getCoverUrl().isEmpty()) return;
+        var optionalPlaylist = playlists.stream().filter(p -> Objects.equals(p.getId(), responsePlaylistCard.getId())).findFirst();
         if (optionalPlaylist.isEmpty()) return;
         var song = optionalPlaylist.get().getSongs().stream().findFirst();
         if (song.isEmpty()) return;
         String url = cloudinaryService.generateImage(song.get().getCover().getPublicId());
-        pl.setCoverUrl(url);
+        responsePlaylistCard.setCoverUrl(url);
     }
 
     @Override
@@ -167,6 +174,78 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .size(pageable.getPageSize())
                 .totalItems(songs.size())
                 .build());
+        response.setAllSongId(playlist.get().getSongs().stream().mapToLong(Song::getId).boxed().toList());
+        return response;
+    }
+
+    @Override
+    public ResponsePlaylistDetail getFavoriteSongs(Pageable pageable) {
+        var user = securityUtil.getCurrentUserDTO();
+        if (user.isEmpty())
+            throw new AppException(AppErrorCode.UNAUTHORIZED);
+
+        var id = user.get().id();
+        var favoriteList = favoriteRepository.findByUser_Id(id);
+        var playlistDetail = new ResponsePlaylistDetail() {{
+            setName("My favorites");
+            setTotalSong(favoriteList.size());
+            setDescription("All song i love");
+            setAllSongId(favoriteList.stream().mapToLong(it -> it.getSong().getId()).boxed().toList());
+        }};
+        var favoritePaging = favoriteList.stream().skip((long) pageable.getPageSize() * pageable.getPageNumber()).limit(pageable.getPageSize()).toList();
+        var totalPage = (favoriteList.size() / pageable.getPageSize());
+        playlistDetail.setSongs(ApiPaging.<ResponseSongCard>builder()
+                .content(favoritePaging.stream().map(it -> toSongResponseCard(it.getSong())).collect(Collectors.toList()))
+                .totalPages(totalPage + 1)
+                .isLast(pageable.getPageNumber() == totalPage)
+                .isFirst(pageable.getPageNumber() == 0)
+                .currentPage(pageable.getPageNumber())
+                .size(pageable.getPageSize())
+                .totalItems(favoritePaging.size())
+                .build());
+        if (playlistDetail.getCoverUrl() != null && !playlistDetail.getCoverUrl().isEmpty()) return playlistDetail;
+        var favorite = favoriteList.stream().findFirst();
+        if (favorite.isEmpty()) return playlistDetail;
+        String url = cloudinaryService.generateImage(favorite.get().getSong().getCover().getPublicId());
+        playlistDetail.setCoverUrl(url);
+        return playlistDetail;
+    }
+
+    @Override
+    public ApiPaging<ResponsePlaylistCard> getPlaylistNotHasSong(String name, long id, Pageable pageable) {
+        var user = securityUtil.getCurrentUserDTO();
+        if (user.isEmpty())
+            throw new AppException(AppErrorCode.UNAUTHORIZED);
+
+        Page<Playlist> page = playlistRepository.findByNameLikeAndUser_IdAndSongsNotContains(
+                "%" + name + "%",
+                user.get().id()
+                , new Song() {{
+                    setId(id);
+                }}, pageable);
+        var response = pageableUtil.handlePaging(page, playListMapper::toPlaylistCardResponse);
+
+        response.getContent().forEach(pl -> setPlaylistCoverUrl(pl, page.getContent()));
+
+        return response;
+    }
+
+    @Override
+    public ApiPaging<ResponsePlaylistCard> getPlaylistHasSong(String name, long id, Pageable pageable) {
+        var user = securityUtil.getCurrentUserDTO();
+        if (user.isEmpty())
+            throw new AppException(AppErrorCode.UNAUTHORIZED);
+
+        Page<Playlist> page = playlistRepository.findByNameLikeAndUser_IdAndSongsContains(
+                "%" + name + "%",
+                user.get().id()
+                , new Song() {{
+                    setId(id);
+                }}, pageable);
+        var response = pageableUtil.handlePaging(page, playListMapper::toPlaylistCardResponse);
+
+        response.getContent().forEach(pl -> setPlaylistCoverUrl(pl, page.getContent()));
+
         return response;
     }
 
@@ -176,4 +255,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         responseSong.setCover(url);
         return responseSong;
     }
+
+
 }

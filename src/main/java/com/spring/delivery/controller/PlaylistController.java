@@ -30,10 +30,16 @@ public class PlaylistController {
         return ResponseEntity.ok().body(playlistService.getPlayList(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     @ApiMessage("Get success")
     public ResponseEntity<ResponsePlaylistDetail> getPlaylistDetail(@PathVariable("id") Long id, @PageableDefault(sort = "id") Pageable pageable) {
         return ResponseEntity.ok().body(playlistService.getPlayListDetail(id, pageable));
+    }
+
+    @GetMapping("/favorite")
+    @ApiMessage("Get success")
+    public ResponseEntity<ResponsePlaylistDetail> getFavorite(@PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getFavoriteSongs(pageable));
     }
 
     @PostMapping()
@@ -63,5 +69,24 @@ public class PlaylistController {
     public ResponseEntity<Void> deletePlaylist(@PathVariable Long id) {
         playlistService.deletePlaylist(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/playlist-to-add-song")
+    @ApiMessage("Get success")
+    public ResponseEntity<ApiPaging<ResponsePlaylistCard>> getPlaylistNotHasSong(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam("id") long id,
+            @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getPlaylistNotHasSong(name, id, pageable));
+    }
+
+
+    @GetMapping("/playlist-to-remove-song")
+    @ApiMessage("Get success")
+    public ResponseEntity<ApiPaging<ResponsePlaylistCard>> getPlaylistHasSong(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam("id") long id,
+            @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getPlaylistHasSong(name, id, pageable));
     }
 }

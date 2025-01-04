@@ -1,26 +1,28 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               8.0.40 - MySQL Community Server - GPL
--- Server OS:                    Linux
--- HeidiSQL Version:             12.8.0.6908
--- --------------------------------------------------------
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
+--
+-- Host: 127.0.0.1    Database: music-player
+-- ------------------------------------------------------
+-- Server version	8.0.40-0ubuntu0.24.10.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+--
+-- Table structure for table `albums`
+--
 
--- Dumping database structure for music-player
-CREATE DATABASE IF NOT EXISTS `music-player` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `music-player`;
-
--- Dumping structure for table music-player.albums
-CREATE TABLE IF NOT EXISTS `albums` (
+DROP TABLE IF EXISTS `albums`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `albums` (
   `artist_id` bigint DEFAULT NULL,
   `cover_id` bigint DEFAULT NULL,
   `created_at` datetime(6) DEFAULT NULL,
@@ -33,12 +35,27 @@ CREATE TABLE IF NOT EXISTS `albums` (
   KEY `FK72gqyi6l1j674radjyitcm86f` (`artist_id`),
   CONSTRAINT `FK72gqyi6l1j674radjyitcm86f` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`id`),
   CONSTRAINT `FKtgvfxsti87c6kk338erunic6k` FOREIGN KEY (`cover_id`) REFERENCES `resources` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.albums: ~0 rows (approximately)
+--
+-- Dumping data for table `albums`
+--
 
--- Dumping structure for table music-player.artists
-CREATE TABLE IF NOT EXISTS `artists` (
+LOCK TABLES `albums` WRITE;
+/*!40000 ALTER TABLE `albums` DISABLE KEYS */;
+INSERT INTO `albums` VALUES (2,129,'2024-12-27 05:34:04.000000',1,'2024-12-27 05:34:03.000000','2024-12-27 05:34:08.000000','Bảo tàng của tiếc nuối');
+/*!40000 ALTER TABLE `albums` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `artists`
+--
+
+DROP TABLE IF EXISTS `artists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `artists` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `bio` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
@@ -49,32 +66,58 @@ CREATE TABLE IF NOT EXISTS `artists` (
   UNIQUE KEY `UKe5epcnqqucenx1xrah90nhntg` (`avatar_id`),
   CONSTRAINT `FKkbg1bb4y3w3tjxepa67f9anno` FOREIGN KEY (`avatar_id`) REFERENCES `resources` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.artists: ~8 rows (approximately)
-INSERT INTO `artists` (`id`, `name`, `bio`, `avatar_id`, `created_at`, `updated_at`) VALUES
-	(1, 'Đen ', 'Anh Đen', 132, '2024-12-05 21:04:39.000000', NULL),
-	(2, 'Vũ', NULL, 129, '2024-12-06 01:40:34.000000', NULL),
-	(3, 'Dalab', NULL, 127, '2024-12-06 01:40:34.000000', NULL),
-	(4, 'Kay Trần ', NULL, 131, '2024-12-06 01:40:35.000000', NULL),
-	(5, 'Karik', NULL, 128, '2024-12-06 01:40:35.000000', NULL),
-	(6, 'Sơn tùng MTP', NULL, 126, '2024-12-06 01:40:36.000000', NULL),
-	(7, 'Jack', NULL, 125, '2024-12-06 01:40:36.000000', NULL),
-	(8, 'Mono', NULL, 130, '2024-12-06 01:40:37.000000', NULL);
+--
+-- Dumping data for table `artists`
+--
 
--- Dumping structure for table music-player.favorites
-CREATE TABLE IF NOT EXISTS `favorites` (
-  `song_id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`song_id`,`user_id`),
+LOCK TABLES `artists` WRITE;
+/*!40000 ALTER TABLE `artists` DISABLE KEYS */;
+INSERT INTO `artists` VALUES (1,'Đen ','Anh Đen',132,'2024-12-05 21:04:39.000000',NULL),(2,'Vũ',NULL,129,'2024-12-06 01:40:34.000000',NULL),(3,'Dalab',NULL,127,'2024-12-06 01:40:34.000000',NULL),(4,'Kay Trần ',NULL,131,'2024-12-06 01:40:35.000000',NULL),(5,'Karik',NULL,128,'2024-12-06 01:40:35.000000',NULL),(6,'Sơn tùng MTP',NULL,126,'2024-12-06 01:40:36.000000',NULL),(7,'Jack',NULL,125,'2024-12-06 01:40:36.000000',NULL),(8,'Mono',NULL,130,'2024-12-06 01:40:37.000000',NULL);
+/*!40000 ALTER TABLE `artists` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `favorites`
+--
+
+DROP TABLE IF EXISTS `favorites`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `favorites` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `add_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `song_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKqs8yha6nwtpmpq4xa0yro7gwj` (`song_id`),
   KEY `FKk7du8b8ewipawnnpg76d55fus` (`user_id`),
   CONSTRAINT `FKk7du8b8ewipawnnpg76d55fus` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKqs8yha6nwtpmpq4xa0yro7gwj` FOREIGN KEY (`song_id`) REFERENCES `songs` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.favorites: ~0 rows (approximately)
+--
+-- Dumping data for table `favorites`
+--
 
--- Dumping structure for table music-player.genres
-CREATE TABLE IF NOT EXISTS `genres` (
+LOCK TABLES `favorites` WRITE;
+/*!40000 ALTER TABLE `favorites` DISABLE KEYS */;
+INSERT INTO `favorites` VALUES (4,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',2,17),(5,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1120,17),(6,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1121,17),(7,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1122,17),(8,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1123,17),(9,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1124,17),(10,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1125,17),(11,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1126,17),(12,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1127,17),(13,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1117,17),(14,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1118,17),(15,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1116,17),(16,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1119,17),(17,'2025-01-03 23:07:25','2025-01-03 23:07:25','2025-01-03 23:07:25',1115,17),(36,'2025-01-03 17:57:27','2025-01-03 17:57:27','2025-01-04 00:57:27',1,17),(37,'2025-01-04 02:02:44','2025-01-04 02:02:44','2025-01-04 09:02:44',1,18);
+/*!40000 ALTER TABLE `favorites` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `genres`
+--
+
+DROP TABLE IF EXISTS `genres`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `genres` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `description` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -85,18 +128,26 @@ CREATE TABLE IF NOT EXISTS `genres` (
   UNIQUE KEY `UK76mow94tquv505ter690lm3py` (`cover_id`),
   CONSTRAINT `FK3bb5phvldcikw76ly6dk6e61h` FOREIGN KEY (`cover_id`) REFERENCES `resources` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.genres: ~6 rows (approximately)
-INSERT INTO `genres` (`id`, `description`, `name`, `cover_id`, `created_at`, `updated_at`) VALUES
-	(21, NULL, 'BALAB', NULL, '2024-12-05 23:07:58.000000', '2024-12-05 23:08:02.000000'),
-	(22, NULL, 'EDM', NULL, NULL, NULL),
-	(23, NULL, 'KPOP', NULL, NULL, NULL),
-	(24, NULL, 'JPOP', NULL, NULL, NULL),
-	(25, NULL, 'RAP', NULL, NULL, NULL),
-	(26, NULL, 'MELODY', NULL, NULL, NULL);
+--
+-- Dumping data for table `genres`
+--
 
--- Dumping structure for table music-player.listening_histories
-CREATE TABLE IF NOT EXISTS `listening_histories` (
+LOCK TABLES `genres` WRITE;
+/*!40000 ALTER TABLE `genres` DISABLE KEYS */;
+INSERT INTO `genres` VALUES (21,NULL,'BALAB',NULL,'2024-12-05 23:07:58.000000','2024-12-05 23:08:02.000000'),(22,NULL,'EDM',NULL,NULL,NULL),(23,NULL,'KPOP',NULL,NULL,NULL),(24,NULL,'JPOP',NULL,NULL,NULL),(25,NULL,'RAP',NULL,NULL,NULL),(26,NULL,'MELODY',NULL,NULL,NULL);
+/*!40000 ALTER TABLE `genres` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `listening_histories`
+--
+
+DROP TABLE IF EXISTS `listening_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `listening_histories` (
   `created_at` datetime(6) DEFAULT NULL,
   `id` bigint NOT NULL AUTO_INCREMENT,
   `song_id` bigint DEFAULT NULL,
@@ -107,21 +158,27 @@ CREATE TABLE IF NOT EXISTS `listening_histories` (
   KEY `FK6t8x2o8v490fql36b4nq8n0cg` (`user_id`),
   CONSTRAINT `FK6t8x2o8v490fql36b4nq8n0cg` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKm4i67tpl37vlrjsmbe55k27q0` FOREIGN KEY (`song_id`) REFERENCES `songs` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.listening_histories: ~0 rows (approximately)
+--
+-- Dumping data for table `listening_histories`
+--
 
--- Dumping structure for table music-player.permissions
-CREATE TABLE IF NOT EXISTS `permissions` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+LOCK TABLES `listening_histories` WRITE;
+/*!40000 ALTER TABLE `listening_histories` DISABLE KEYS */;
+INSERT INTO `listening_histories` VALUES ('2024-12-26 23:26:30.100567',1,1,'2024-12-26 23:26:30.100605',17),('2024-12-26 23:51:07.111220',2,1,'2024-12-26 23:51:07.111402',17),('2024-12-26 23:51:54.791532',3,1,'2024-12-26 23:51:54.791542',17),('2024-12-26 23:54:43.604463',4,1,'2024-12-26 23:54:43.604475',17),('2024-12-26 23:55:10.628021',5,1,'2024-12-26 23:55:10.628035',17),('2024-12-26 23:55:23.721929',6,2,'2024-12-26 23:55:23.721940',17),('2024-12-26 23:56:31.077542',7,1115,'2024-12-26 23:56:31.077554',17),('2024-12-27 00:00:09.358150',8,1,'2024-12-27 00:00:09.358173',17),('2024-12-27 00:02:16.645921',9,1115,'2024-12-27 00:02:16.645930',17),('2024-12-27 00:07:46.869344',10,1115,'2024-12-27 00:07:46.869361',17),('2024-12-27 00:08:24.152218',11,1115,'2024-12-27 00:08:24.152235',17),('2024-12-27 00:09:30.495258',12,1115,'2024-12-27 00:09:30.495273',17),('2024-12-27 00:10:42.828685',13,1,'2024-12-27 00:10:42.828702',17),('2024-12-27 00:10:48.020413',14,1115,'2024-12-27 00:10:48.020433',17),('2024-12-27 00:10:50.948580',15,1115,'2024-12-27 00:10:50.948594',17),('2024-12-27 00:10:55.211596',16,1115,'2024-12-27 00:10:55.211611',17),('2024-12-27 00:10:57.691077',17,1115,'2024-12-27 00:10:57.691099',17),('2024-12-27 00:11:01.533172',18,1115,'2024-12-27 00:11:01.533196',17),('2024-12-27 00:11:08.433525',19,1115,'2024-12-27 00:11:08.433549',17),('2024-12-27 00:11:12.695283',20,1115,'2024-12-27 00:11:12.695299',17),('2024-12-27 00:11:17.931657',21,1115,'2024-12-27 00:11:17.931682',17),('2024-12-27 00:11:23.952077',22,1115,'2024-12-27 00:11:23.952089',17),('2024-12-27 00:11:37.883879',23,1115,'2024-12-27 00:11:37.883890',17),('2024-12-27 00:11:43.418141',24,1115,'2024-12-27 00:11:43.418177',17),('2024-12-27 00:11:47.000766',25,1115,'2024-12-27 00:11:47.000776',17),('2024-12-27 00:11:49.160153',26,1115,'2024-12-27 00:11:49.160176',17),('2024-12-27 00:11:53.458246',27,1113,'2024-12-27 00:11:53.458276',17),('2024-12-27 00:13:59.200771',28,1115,'2024-12-27 00:13:59.200785',17),('2024-12-27 00:14:04.312758',29,1115,'2024-12-27 00:14:04.312778',17),('2024-12-27 00:14:08.413068',30,1115,'2024-12-27 00:14:08.413096',17),('2024-12-27 00:25:53.349505',31,1115,'2024-12-27 00:25:53.349520',17),('2024-12-27 01:12:50.011618',32,1,'2024-12-27 01:12:50.011667',17),('2024-12-27 01:13:01.236895',33,1,'2024-12-27 01:13:01.236918',17),('2024-12-27 01:13:03.288027',34,1,'2024-12-27 01:13:03.288043',17),('2024-12-27 01:13:05.962005',35,1115,'2024-12-27 01:13:05.962023',17),('2024-12-27 01:13:09.543736',36,1,'2024-12-27 01:13:09.543761',17),('2024-12-27 01:13:48.561621',37,1115,'2024-12-27 01:13:48.561641',17),('2024-12-27 01:13:52.655106',38,1,'2024-12-27 01:13:52.655128',17),('2024-12-27 01:15:37.281098',39,1,'2024-12-27 01:15:37.281111',17),('2024-12-27 01:15:46.205467',40,1115,'2024-12-27 01:15:46.205486',17),('2024-12-27 01:17:12.968849',41,1,'2024-12-27 01:17:12.968861',17),('2024-12-27 01:17:40.176823',42,1,'2024-12-27 01:17:40.176844',17),('2024-12-27 01:17:42.968269',43,1115,'2024-12-27 01:17:42.968281',17),('2024-12-27 01:17:45.473206',44,1,'2024-12-27 01:17:45.473225',17),('2024-12-27 01:17:49.553460',45,1115,'2024-12-27 01:17:49.553470',17),('2024-12-27 01:17:56.615064',46,1,'2024-12-27 01:17:56.615077',17),('2024-12-27 01:18:40.140666',47,1115,'2024-12-27 01:18:40.140684',17),('2024-12-27 01:22:28.063120',48,1115,'2024-12-27 01:22:28.063140',17),('2024-12-27 01:22:33.130959',49,1,'2024-12-27 01:22:33.130973',17),('2024-12-27 01:22:52.710894',50,1115,'2024-12-27 01:22:52.710906',17),('2024-12-27 01:25:20.216272',51,1,'2024-12-27 01:25:20.216284',17),('2024-12-27 01:25:22.164789',52,1115,'2024-12-27 01:25:22.164800',17),('2024-12-27 01:25:23.814475',53,1,'2024-12-27 01:25:23.814487',17),('2024-12-27 01:25:25.852292',54,1115,'2024-12-27 01:25:25.852305',17),('2024-12-27 01:25:28.123614',55,1,'2024-12-27 01:25:28.123633',17),('2024-12-27 01:25:30.086568',56,1115,'2024-12-27 01:25:30.086581',17),('2024-12-27 01:25:32.013990',57,1,'2024-12-27 01:25:32.014003',17),('2024-12-27 01:25:33.759007',58,1115,'2024-12-27 01:25:33.759019',17),('2024-12-27 01:25:35.401655',59,1,'2024-12-27 01:25:35.401667',17),('2024-12-27 01:26:50.322146',60,1,'2024-12-27 01:26:50.322168',17),('2024-12-27 01:26:52.364078',61,1115,'2024-12-27 01:26:52.364089',17),('2024-12-27 01:26:55.246861',62,1,'2024-12-27 01:26:55.246870',17),('2024-12-27 01:26:57.598689',63,1115,'2024-12-27 01:26:57.598709',17),('2024-12-27 01:40:08.573841',64,1,'2024-12-27 01:40:08.573863',17),('2024-12-27 01:40:11.415660',65,2,'2024-12-27 01:40:11.415671',17),('2024-12-27 09:13:26.455817',66,1115,'2024-12-27 09:13:26.455846',17),('2024-12-28 04:14:45.117707',67,2,'2024-12-28 04:14:45.117730',17),('2024-12-28 04:16:18.250960',68,2,'2024-12-28 04:16:18.250985',17),('2024-12-28 04:18:31.517527',69,2,'2024-12-28 04:18:31.517543',17),('2024-12-28 04:18:54.462004',70,1,'2024-12-28 04:18:54.462019',17),('2024-12-28 04:18:59.051182',71,1115,'2024-12-28 04:18:59.051196',17),('2024-12-28 07:13:28.586978',72,1115,'2024-12-28 07:13:28.587012',17),('2024-12-28 07:13:57.831073',73,1,'2024-12-28 07:13:57.831102',17),('2024-12-28 07:13:59.833566',74,1115,'2024-12-28 07:13:59.833598',17),('2024-12-28 07:14:02.646812',75,1,'2024-12-28 07:14:02.646847',17),('2024-12-28 07:14:12.692483',76,1115,'2024-12-28 07:14:12.692513',17),('2024-12-28 07:14:38.493098',77,1,'2024-12-28 07:14:38.493121',17),('2024-12-28 07:23:31.223233',78,2,'2024-12-28 07:23:31.223267',17),('2024-12-28 07:23:39.510316',79,1115,'2024-12-28 07:23:39.510345',17),('2024-12-28 07:23:47.902058',80,1,'2024-12-28 07:23:47.902111',17),('2024-12-28 07:24:00.611791',81,2,'2024-12-28 07:24:00.611819',17),('2024-12-28 07:24:02.234520',82,1115,'2024-12-28 07:24:02.234550',17),('2024-12-28 07:24:08.993082',83,2,'2024-12-28 07:24:08.993106',17),('2024-12-28 07:24:14.212305',84,1115,'2024-12-28 07:24:14.212325',17),('2024-12-28 07:24:15.543835',85,2,'2024-12-28 07:24:15.543859',17),('2024-12-28 07:25:20.470842',86,1115,'2024-12-28 07:25:20.470862',17),('2024-12-28 07:25:24.778114',87,2,'2024-12-28 07:25:24.778142',17),('2024-12-28 07:27:08.387888',88,1,'2024-12-28 07:27:08.387916',17),('2024-12-28 07:27:10.874209',89,2,'2024-12-28 07:27:10.874232',17),('2024-12-28 07:27:19.874233',90,2,'2024-12-28 07:27:19.874254',17),('2024-12-28 07:27:27.307466',91,1115,'2024-12-28 07:27:27.307481',17),('2024-12-28 07:28:01.347856',92,2,'2024-12-28 07:28:01.347876',17),('2024-12-28 07:28:38.319305',93,2,'2024-12-28 07:28:38.319327',17),('2024-12-28 07:28:43.846714',94,1,'2024-12-28 07:28:43.846736',17),('2024-12-28 07:38:14.162681',95,1114,'2024-12-28 07:38:14.162698',17),('2024-12-28 07:40:56.906062',96,1115,'2024-12-28 07:40:56.906081',17),('2024-12-28 07:41:32.411895',97,1115,'2024-12-28 07:41:32.411911',17),('2024-12-28 07:44:11.910167',98,1115,'2024-12-28 07:44:11.910186',17),('2024-12-28 08:09:39.434331',99,1115,'2024-12-28 08:09:39.434344',17),('2024-12-28 08:11:38.943657',100,1115,'2024-12-28 08:11:38.943669',17),('2024-12-28 08:12:47.782260',101,1115,'2024-12-28 08:12:47.782281',17),('2024-12-28 08:13:30.340749',102,1115,'2024-12-28 08:13:30.340766',17),('2024-12-28 08:13:33.698273',103,1115,'2024-12-28 08:13:33.698290',17),('2024-12-28 08:14:11.666278',104,2,'2024-12-28 08:14:11.666297',17),('2024-12-28 08:47:43.402710',105,2,'2024-12-28 08:47:43.402731',17),('2024-12-28 08:48:26.610859',106,1,'2024-12-28 08:48:26.610875',17),('2024-12-28 08:49:51.703777',107,1115,'2024-12-28 08:49:51.703793',17),('2024-12-28 08:51:13.755896',108,1,'2024-12-28 08:51:13.755914',17),('2024-12-28 08:51:23.472036',109,2,'2024-12-28 08:51:23.472051',17),('2025-01-03 11:46:34.468083',110,2,'2025-01-03 11:46:34.468113',17),('2025-01-03 11:46:35.620104',111,2,'2025-01-03 11:46:35.620160',17),('2025-01-03 11:46:35.622667',112,2,'2025-01-03 11:46:35.622697',17),('2025-01-03 11:46:35.627002',113,1,'2025-01-03 11:46:35.627024',17),('2025-01-03 11:46:35.628810',114,2,'2025-01-03 11:46:35.628838',17),('2025-01-03 11:46:35.634406',115,2,'2025-01-03 11:46:35.634445',17),('2025-01-03 11:46:35.646325',116,1,'2025-01-03 11:46:35.646358',17),('2025-01-03 15:17:00.908528',117,1125,'2025-01-03 15:17:00.908544',17),('2025-01-03 15:37:13.702534',118,1113,'2025-01-03 15:37:13.702547',17),('2025-01-03 15:41:01.654821',119,1122,'2025-01-03 15:41:01.654872',17),('2025-01-03 22:07:08.560834',120,1124,'2025-01-03 22:07:08.560858',17),('2025-01-03 23:43:56.978587',121,1113,'2025-01-03 23:43:56.978609',17),('2025-01-03 23:46:44.003356',122,1114,'2025-01-03 23:46:44.003378',17),('2025-01-04 00:11:39.062326',123,1113,'2025-01-04 00:11:39.062340',17),('2025-01-04 00:11:41.666932',124,1114,'2025-01-04 00:11:41.666947',17),('2025-01-04 00:11:43.829191',125,2,'2025-01-04 00:11:43.829205',17),('2025-01-04 00:11:47.629533',126,1120,'2025-01-04 00:11:47.629547',17),('2025-01-04 00:11:58.470776',127,1121,'2025-01-04 00:11:58.470793',17),('2025-01-04 00:12:06.657277',128,1120,'2025-01-04 00:12:06.657294',17),('2025-01-04 00:12:09.740391',129,1121,'2025-01-04 00:12:09.740402',17),('2025-01-04 00:12:11.775805',130,1122,'2025-01-04 00:12:11.775817',17),('2025-01-04 00:12:14.856516',131,1123,'2025-01-04 00:12:14.856531',17),('2025-01-04 00:12:24.686463',132,1122,'2025-01-04 00:12:24.686476',17),('2025-01-04 00:12:29.383315',133,1123,'2025-01-04 00:12:29.383331',17),('2025-01-04 00:12:34.913630',134,1124,'2025-01-04 00:12:34.913642',17),('2025-01-04 00:12:39.212515',135,1125,'2025-01-04 00:12:39.212527',17),('2025-01-04 00:12:44.743454',136,1126,'2025-01-04 00:12:44.743467',17),('2025-01-04 00:14:35.956380',137,1113,'2025-01-04 00:14:35.956396',17),('2025-01-04 00:14:45.382109',138,1124,'2025-01-04 00:14:45.382126',17),('2025-01-04 00:29:12.916202',139,1125,'2025-01-04 00:29:12.916217',17),('2025-01-04 00:29:15.379677',140,1126,'2025-01-04 00:29:15.379688',17),('2025-01-04 00:29:16.983552',141,1127,'2025-01-04 00:29:16.983560',17),('2025-01-04 00:29:31.731895',142,1113,'2025-01-04 00:29:31.731905',17),('2025-01-04 00:30:15.373707',143,1,'2025-01-04 00:30:15.373727',17),('2025-01-04 00:30:44.436395',144,1114,'2025-01-04 00:30:44.436405',17),('2025-01-04 00:31:11.058212',145,2,'2025-01-04 00:31:11.058222',17),('2025-01-04 00:34:38.739757',146,2,'2025-01-04 00:34:38.739768',17),('2025-01-04 00:36:04.950250',147,2,'2025-01-04 00:36:04.950264',17),('2025-01-04 00:37:37.113341',148,2,'2025-01-04 00:37:37.113355',17),('2025-01-04 00:38:29.545138',149,2,'2025-01-04 00:38:29.545153',17),('2025-01-04 00:39:48.782125',150,2,'2025-01-04 00:39:48.782137',17),('2025-01-04 00:40:35.892090',151,2,'2025-01-04 00:40:35.892101',17),('2025-01-04 00:45:44.509591',152,2,'2025-01-04 00:45:44.509609',17),('2025-01-04 00:46:03.789614',153,1120,'2025-01-04 00:46:03.789630',17),('2025-01-04 00:49:10.658722',154,2,'2025-01-04 00:49:10.658737',17),('2025-01-04 00:50:09.133050',155,2,'2025-01-04 00:50:09.133062',17),('2025-01-04 00:51:49.907543',156,2,'2025-01-04 00:51:49.907557',17),('2025-01-04 00:53:21.221134',157,2,'2025-01-04 00:53:21.221146',17),('2025-01-04 00:54:18.372672',158,1,'2025-01-04 00:54:18.372692',17),('2025-01-04 00:54:58.623996',159,1,'2025-01-04 00:54:58.624015',17),('2025-01-04 00:55:15.329678',160,1,'2025-01-04 00:55:15.329697',17),('2025-01-04 00:55:18.044390',161,1,'2025-01-04 00:55:18.044404',17),('2025-01-04 00:56:34.021175',162,1,'2025-01-04 00:56:34.021224',17),('2025-01-04 01:24:23.386418',163,2,'2025-01-04 01:24:23.386433',17),('2025-01-04 01:54:34.930091',164,2,'2025-01-04 01:54:34.930110',17),('2025-01-04 08:15:53.340940',165,1123,'2025-01-04 08:15:53.340958',17),('2025-01-04 08:24:56.972719',166,1124,'2025-01-04 08:24:56.972757',17),('2025-01-04 08:24:58.731060',167,1124,'2025-01-04 08:24:58.731073',17),('2025-01-04 08:24:58.737223',168,1124,'2025-01-04 08:24:58.737240',17),('2025-01-04 08:24:58.740397',169,1124,'2025-01-04 08:24:58.740410',17),('2025-01-04 08:24:58.744446',170,1124,'2025-01-04 08:24:58.744461',17),('2025-01-04 08:24:58.754518',171,1124,'2025-01-04 08:24:58.754533',17),('2025-01-04 08:24:58.764681',172,1124,'2025-01-04 08:24:58.764698',17),('2025-01-04 08:55:53.446824',173,1121,'2025-01-04 08:55:53.446838',18),('2025-01-04 09:02:37.201851',174,1,'2025-01-04 09:02:37.201867',18),('2025-01-04 09:05:04.131495',175,1,'2025-01-04 09:05:04.131510',18),('2025-01-04 09:09:25.484364',176,2,'2025-01-04 09:09:25.484383',18),('2025-01-04 09:09:25.484364',177,2,'2025-01-04 09:09:25.484384',18),('2025-01-04 09:09:25.484364',178,1,'2025-01-04 09:09:25.484383',18),('2025-01-04 09:09:25.484364',179,1,'2025-01-04 09:09:25.484385',18),('2025-01-04 09:09:45.906225',180,1121,'2025-01-04 09:09:45.906241',18),('2025-01-04 09:10:22.340169',181,1,'2025-01-04 09:10:22.340185',18),('2025-01-04 09:10:52.565799',182,1121,'2025-01-04 09:10:52.565812',18),('2025-01-04 09:14:33.103019',183,1,'2025-01-04 09:14:33.103034',18),('2025-01-04 10:20:47.399347',184,1,'2025-01-04 10:20:47.399358',18),('2025-01-04 10:59:40.989400',185,1,'2025-01-04 10:59:40.989412',18),('2025-01-04 11:02:03.914672',186,1,'2025-01-04 11:02:03.914681',18),('2025-01-04 11:08:05.387761',187,1,'2025-01-04 11:08:05.387814',18),('2025-01-04 11:18:00.132536',188,1,'2025-01-04 11:18:00.132547',18),('2025-01-04 11:22:15.297067',189,1,'2025-01-04 11:22:15.297079',18),('2025-01-04 11:23:45.860578',190,1,'2025-01-04 11:23:45.860595',18),('2025-01-04 11:24:46.861190',191,1,'2025-01-04 11:24:46.861203',18),('2025-01-04 11:25:37.847870',192,1,'2025-01-04 11:25:37.847884',18),('2025-01-04 11:30:36.266337',193,1,'2025-01-04 11:30:36.266350',18),('2025-01-04 11:34:40.181479',194,1,'2025-01-04 11:34:40.181493',18),('2025-01-04 11:34:54.088976',195,1,'2025-01-04 11:34:54.088992',18),('2025-01-04 11:36:53.489704',196,1,'2025-01-04 11:36:53.489715',18),('2025-01-04 11:39:16.948771',197,1,'2025-01-04 11:39:16.948781',18),('2025-01-04 11:40:23.638561',198,1,'2025-01-04 11:40:23.638572',18),('2025-01-04 11:40:54.143587',199,1,'2025-01-04 11:40:54.143611',18),('2025-01-04 11:41:45.226945',200,1,'2025-01-04 11:41:45.226955',18),('2025-01-04 11:46:49.972711',201,1,'2025-01-04 11:46:49.972721',18),('2025-01-04 11:47:33.915066',202,1127,'2025-01-04 11:47:33.915079',18),('2025-01-04 11:51:10.584819',203,1,'2025-01-04 11:51:10.584834',18),('2025-01-04 11:52:31.897908',204,1,'2025-01-04 11:52:31.897921',18),('2025-01-04 11:54:14.516044',205,1,'2025-01-04 11:54:14.516055',17);
+/*!40000 ALTER TABLE `listening_histories` ENABLE KEYS */;
+UNLOCK TABLES;
 
--- Dumping data for table music-player.permissions: ~0 rows (approximately)
+--
+-- Table structure for table `permission_role`
+--
 
--- Dumping structure for table music-player.permission_role
-CREATE TABLE IF NOT EXISTS `permission_role` (
+DROP TABLE IF EXISTS `permission_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permission_role` (
   `role_id` bigint NOT NULL,
   `permission_id` bigint NOT NULL,
   PRIMARY KEY (`role_id`,`permission_id`),
@@ -129,11 +186,48 @@ CREATE TABLE IF NOT EXISTS `permission_role` (
   CONSTRAINT `FK3vhflqw0lwbwn49xqoivrtugt` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   CONSTRAINT `FK6mg4g9rc8u87l0yavf8kjut05` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.permission_role: ~0 rows (approximately)
+--
+-- Dumping data for table `permission_role`
+--
 
--- Dumping structure for table music-player.playlists
-CREATE TABLE IF NOT EXISTS `playlists` (
+LOCK TABLES `permission_role` WRITE;
+/*!40000 ALTER TABLE `permission_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permission_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permissions`
+--
+
+DROP TABLE IF EXISTS `permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permissions` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permissions`
+--
+
+LOCK TABLES `permissions` WRITE;
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `playlists`
+--
+
+DROP TABLE IF EXISTS `playlists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `playlists` (
   `is_public` bit(1) NOT NULL,
   `cover_id` bigint DEFAULT NULL,
   `created_at` datetime(6) DEFAULT NULL,
@@ -147,12 +241,27 @@ CREATE TABLE IF NOT EXISTS `playlists` (
   KEY `FKtgjwvfg23v990xk7k0idmqbrj` (`user_id`),
   CONSTRAINT `FKpja54sfifmddiijlb4upigvqt` FOREIGN KEY (`cover_id`) REFERENCES `resources` (`id`),
   CONSTRAINT `FKtgjwvfg23v990xk7k0idmqbrj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.playlists: ~1 rows (approximately)
+--
+-- Dumping data for table `playlists`
+--
 
--- Dumping structure for table music-player.playlists_songs
-CREATE TABLE IF NOT EXISTS `playlists_songs` (
+LOCK TABLES `playlists` WRITE;
+/*!40000 ALTER TABLE `playlists` DISABLE KEYS */;
+INSERT INTO `playlists` VALUES (_binary '',NULL,'2024-12-25 14:55:12.484820',3,'2024-12-25 14:55:12.484933',1,'baiff hats hay','Đâu chỉ riêng em'),(_binary '',NULL,'2024-12-26 03:29:16.204076',9,'2024-12-26 03:29:16.204132',17,'Bài hát này rất hay','Bảo tàng của nuối tiếc.'),(_binary '\0',NULL,'2024-12-28 04:19:15.155881',10,'2024-12-28 04:19:15.155894',17,'','Mono mãi đỉnh'),(_binary '\0',NULL,'2025-01-04 10:06:52.470567',21,'2025-01-04 10:06:52.470581',18,'','t7yuk'),(_binary '\0',NULL,'2025-01-04 10:07:06.985131',22,'2025-01-04 10:07:06.985148',18,'','r'),(_binary '\0',NULL,'2025-01-04 10:07:11.082176',23,'2025-01-04 10:07:11.082194',18,'','f'),(_binary '\0',NULL,'2025-01-04 10:19:19.826497',24,'2025-01-04 10:19:19.826765',18,'','sík'),(_binary '\0',NULL,'2025-01-04 10:20:56.200988',25,'2025-01-04 10:20:56.201006',18,'','fuf'),(_binary '\0',NULL,'2025-01-04 10:21:04.089755',26,'2025-01-04 10:21:04.089772',18,'','f6ruu');
+/*!40000 ALTER TABLE `playlists` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `playlists_songs`
+--
+
+DROP TABLE IF EXISTS `playlists_songs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `playlists_songs` (
   `playlist_id` bigint NOT NULL,
   `song_id` bigint NOT NULL,
   PRIMARY KEY (`playlist_id`,`song_id`),
@@ -160,11 +269,26 @@ CREATE TABLE IF NOT EXISTS `playlists_songs` (
   CONSTRAINT `FK2emrpqhxanqunhcodn7s5yca4` FOREIGN KEY (`playlist_id`) REFERENCES `playlists` (`id`),
   CONSTRAINT `FK5pyqf1ff6dfj1xbn5p626i0dr` FOREIGN KEY (`song_id`) REFERENCES `songs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.playlists_songs: ~0 rows (approximately)
+--
+-- Dumping data for table `playlists_songs`
+--
 
--- Dumping structure for table music-player.resources
-CREATE TABLE IF NOT EXISTS `resources` (
+LOCK TABLES `playlists_songs` WRITE;
+/*!40000 ALTER TABLE `playlists_songs` DISABLE KEYS */;
+INSERT INTO `playlists_songs` VALUES (9,1),(10,2),(10,1115);
+/*!40000 ALTER TABLE `playlists_songs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `resources`
+--
+
+DROP TABLE IF EXISTS `resources`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `resources` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `public_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `tag` enum('ALBUM','ARTIST','AUDIO','GENRE','SONG','USER') DEFAULT NULL,
@@ -172,56 +296,53 @@ CREATE TABLE IF NOT EXISTS `resources` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.resources: ~20 rows (approximately)
-INSERT INTO `resources` (`id`, `public_id`, `tag`, `created_at`, `updated_at`, `name`) VALUES
-	(104, 'music-media/audio/Nếu Những Tiếc Nuối  Vũ', 'AUDIO', '2024-12-05 15:48:24', '2024-12-05 15:48:24', 'Nếu Những Tiếc Nuối'),
-	(105, 'music-media/audio/NHỮNG LỜI HỨA BỎ QUÊN', 'AUDIO', '2024-12-05 15:49:49', '2024-12-05 15:49:49', 'NHỮNG LỜI HỨA BỎ QUÊN'),
-	(106, 'music-media/audio/Bầu Trời Mới', 'AUDIO', '2024-12-05 16:00:05', '2024-12-05 16:00:05', 'Bầu Trời Mới'),
-	(107, 'music-media/audio/THERES NO ONE AT ALL', 'AUDIO', '2024-12-05 16:00:36', '2024-12-05 16:00:36', 'THERES NO ONE AT ALL'),
-	(108, 'music-media/audio/Chăm Hoa', 'AUDIO', '2024-12-05 16:01:27', '2024-12-05 16:01:27', 'Chăm Hoa'),
-	(109, 'music-media/audio/THIÊN LÝ ƠI', 'AUDIO', '2024-12-05 16:01:47', '2024-12-05 16:01:47', 'THIÊN LÝ ƠI'),
-	(110, 'music-media/audio/Lối Nhỏ', 'AUDIO', '2024-12-05 16:02:04', '2024-12-05 16:02:04', 'Lối Nhỏ'),
-	(111, 'music-media/audio/BẠN ĐỜI', 'AUDIO', '2024-12-05 16:02:21', '2024-12-05 16:02:21', 'BẠN ĐỜI'),
-	(112, 'music-media/audio/Mang Tiền Về Cho Mẹ', 'AUDIO', '2024-12-05 16:02:37', '2024-12-05 16:02:37', 'Mang Tiền Về Cho Mẹ'),
-	(113, 'music-media/audio/Tết Đong Đầy', 'AUDIO', '2024-12-05 16:02:54', '2024-12-05 16:02:54', 'Tết Đong Đầy'),
-	(115, 'music-media/image/song/neu-nhung-tiec-nuoi', 'SONG', '2024-12-05 16:31:12', '2024-12-05 16:31:12', 'thumb_neu-nhung-tiec-nuoi'),
-	(116, 'music-media/image/song/tet-dong-day', 'SONG', '2024-12-05 16:34:07', '2024-12-05 16:34:07', 'thumb-tet-dong-day'),
-	(117, 'music-media/image/song/nhung-loi-hua-bo-quen', 'SONG', '2024-12-05 16:34:31', '2024-12-05 16:34:31', 'thumb-nhung-loi-hua-bo-quen'),
-	(118, 'music-media/image/song/bau-troi-moi', 'SONG', '2024-12-05 16:34:46', '2024-12-05 16:34:46', 'thumb-bau-troi-moi'),
-	(119, 'music-media/image/song/loi-nho', 'SONG', '2024-12-05 16:35:04', '2024-12-05 16:35:04', 'thumb-loi-nho'),
-	(120, 'music-media/image/song/dem-tien-ve-cho-me', 'SONG', '2024-12-05 16:35:22', '2024-12-05 16:35:22', 'thumb-dem-tien-ve-cho-me'),
-	(121, 'music-media/image/song/cham-hoa', 'SONG', '2024-12-05 16:35:38', '2024-12-05 16:35:38', 'thumb-cham-hoa'),
-	(122, 'music-media/image/song/ban-doi', 'SONG', '2024-12-05 16:35:50', '2024-12-05 16:35:50', 'thumb-ban-doi'),
-	(123, 'music-media/image/song/there-no-one-at-all', 'SONG', '2024-12-05 16:36:05', '2024-12-05 16:36:05', 'thumb-there-no-one-at-all'),
-	(124, 'music-media/image/song/thien-ly-oi', 'SONG', '2024-12-05 16:36:19', '2024-12-05 16:36:19', 'thumb-thien-ly-oi'),
-	(125, 'music-media/image/artist/jack', 'ARTIST', '2024-12-05 18:30:33', '2024-12-05 18:30:33', 'avatar-jack'),
-	(126, 'music-media/image/artist/son-tung', 'ARTIST', '2024-12-05 18:31:01', '2024-12-05 18:31:01', 'avatar-son-tung'),
-	(127, 'music-media/image/artist/dalab', 'ARTIST', '2024-12-05 18:31:36', '2024-12-05 18:31:36', 'avatar-dalab'),
-	(128, 'music-media/image/artist/karik', 'ARTIST', '2024-12-05 18:37:32', '2024-12-05 18:37:32', 'avatar-karik'),
-	(129, 'music-media/image/artist/vu', 'ARTIST', '2024-12-05 18:38:10', '2024-12-05 18:38:10', 'avatar-vu'),
-	(130, 'music-media/image/artist/mono', 'ARTIST', '2024-12-05 18:38:35', '2024-12-05 18:38:35', 'avatar-mono'),
-	(131, 'music-media/image/artist/kay-tran', 'ARTIST', '2024-12-05 18:38:59', '2024-12-05 18:41:40', 'avatar-kay-tran'),
-	(132, 'music-media/image/artist/den-vau', 'ARTIST', '2024-12-05 18:39:24', '2024-12-05 18:41:43', 'avatar-den-vau');
+--
+-- Dumping data for table `resources`
+--
 
--- Dumping structure for table music-player.roles
-CREATE TABLE IF NOT EXISTS `roles` (
+LOCK TABLES `resources` WRITE;
+/*!40000 ALTER TABLE `resources` DISABLE KEYS */;
+INSERT INTO `resources` VALUES (104,'music-media/audio/Nếu Những Tiếc Nuối  Vũ','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Nếu Những Tiếc Nuối'),(105,'music-media/audio/NHỮNG LỜI HỨA BỎ QUÊN','AUDIO','2024-12-05 15:49:49','2024-12-05 15:49:49','NHỮNG LỜI HỨA BỎ QUÊN'),(106,'music-media/audio/Bầu Trời Mới','AUDIO','2024-12-05 16:00:05','2024-12-05 16:00:05','Bầu Trời Mới'),(107,'music-media/audio/THERES NO ONE AT ALL','AUDIO','2024-12-05 16:00:36','2024-12-05 16:00:36','THERES NO ONE AT ALL'),(108,'music-media/audio/Chăm Hoa','AUDIO','2024-12-05 16:01:27','2024-12-05 16:01:27','Chăm Hoa'),(109,'music-media/audio/THIÊN LÝ ƠI','AUDIO','2024-12-05 16:01:47','2024-12-05 16:01:47','THIÊN LÝ ƠI'),(110,'music-media/audio/Lối Nhỏ','AUDIO','2024-12-05 16:02:04','2024-12-05 16:02:04','Lối Nhỏ'),(111,'music-media/audio/BẠN ĐỜI','AUDIO','2024-12-05 16:02:21','2024-12-05 16:02:21','BẠN ĐỜI'),(112,'music-media/audio/Mang Tiền Về Cho Mẹ','AUDIO','2024-12-05 16:02:37','2024-12-05 16:02:37','Mang Tiền Về Cho Mẹ'),(113,'music-media/audio/Tết Đong Đầy','AUDIO','2024-12-05 16:02:54','2024-12-05 16:02:54','Tết Đong Đầy'),(115,'music-media/image/song/neu-nhung-tiec-nuoi','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_neu-nhung-tiec-nuoi'),(116,'music-media/image/song/tet-dong-day','SONG','2024-12-05 16:34:07','2024-12-05 16:34:07','thumb-tet-dong-day'),(117,'music-media/image/song/nhung-loi-hua-bo-quen','SONG','2024-12-05 16:34:31','2024-12-05 16:34:31','thumb-nhung-loi-hua-bo-quen'),(118,'music-media/image/song/bau-troi-moi','SONG','2024-12-05 16:34:46','2024-12-05 16:34:46','thumb-bau-troi-moi'),(119,'music-media/image/song/loi-nho','SONG','2024-12-05 16:35:04','2024-12-05 16:35:04','thumb-loi-nho'),(120,'music-media/image/song/dem-tien-ve-cho-me','SONG','2024-12-05 16:35:22','2024-12-05 16:35:22','thumb-dem-tien-ve-cho-me'),(121,'music-media/image/song/cham-hoa','SONG','2024-12-05 16:35:38','2024-12-05 16:35:38','thumb-cham-hoa'),(122,'music-media/image/song/ban-doi','SONG','2024-12-05 16:35:50','2024-12-05 16:35:50','thumb-ban-doi'),(123,'music-media/image/song/there-no-one-at-all','SONG','2024-12-05 16:36:05','2024-12-05 16:36:05','thumb-there-no-one-at-all'),(124,'music-media/image/song/thien-ly-oi','SONG','2024-12-05 16:36:19','2024-12-05 16:36:19','thumb-thien-ly-oi'),(125,'music-media/image/artist/jack','ARTIST','2024-12-05 18:30:33','2024-12-05 18:30:33','avatar-jack'),(126,'music-media/image/artist/son-tung','ARTIST','2024-12-05 18:31:01','2024-12-05 18:31:01','avatar-son-tung'),(127,'music-media/image/artist/dalab','ARTIST','2024-12-05 18:31:36','2024-12-05 18:31:36','avatar-dalab'),(128,'music-media/image/artist/karik','ARTIST','2024-12-05 18:37:32','2024-12-05 18:37:32','avatar-karik'),(129,'music-media/image/artist/vu','ARTIST','2024-12-05 18:38:10','2024-12-05 18:38:10','avatar-vu'),(130,'music-media/image/artist/mono','ARTIST','2024-12-05 18:38:35','2024-12-05 18:38:35','avatar-mono'),(131,'music-media/image/artist/kay-tran','ARTIST','2024-12-05 18:38:59','2024-12-05 18:41:40','avatar-kay-tran'),(132,'music-media/image/artist/den-vau','ARTIST','2024-12-05 18:39:24','2024-12-05 18:41:43','avatar-den-vau'),(133,'music-media/audio/Những chuyến bay','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Những chuyến bay'),(134,'music-media/audio/Ngồi Chờ Trong Vấn Vương','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Ngồi Chờ Trong Vấn Vương'),(135,'music-media/audio/Mùa mưa ấy','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Mùa mưa ấy'),(136,'music-media/audio/Mây khóc vì điều gì','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Mây khóc vì điều gì?'),(137,'music-media/image/song/may-khoc-vi-dieu-gi','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_may-khoc-vi-dieu-gi'),(138,'music-media/image/song/mua-mua-ay','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_mua-mua-ay'),(139,'music-media/image/song/ngoi-cho-trong-van-vuong','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_ngoi-cho-trong-van-vuong'),(140,'music-media/image/song/nhung-chuyen-bay','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_nhung-chuyen-bay'),(141,'music-media/image/song/va-em-se-luon-la-nguoi-toi-yeu-nhat','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_va-em-se-luon-la-nguoi-toi-yeu-nhat'),(142,'music-media/image/song/danh-het-xuan-thi-de-cho-nhau','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_danh-het-xuan-thi-de-cho-nhau'),(143,'music-media/audio/Dành hết xuân thì để chờ nhau','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Dành hết xuân thì để chờ nhau'),(144,'music-media/audio/Và em sẽ luôn là người tôi yêu nhất','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Và em sẽ luôn là người tôi yêu nhất'),(145,'music-media/audio/Không yêu em thì yêu ai','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Không yêu em thì yêu ai'),(146,'music-media/image/song/khong-yeu-em-thi-yeu-ai','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_khong-yeu-em-thi-yeu-ai'),(147,'music-media/image/song/binh-yen','SONG','2024-12-05 16:31:12','2024-12-05 16:31:12','thumb_binh-yen'),(148,'music-media/audio/Bình yên','AUDIO','2024-12-05 15:48:24','2024-12-05 15:48:24','Bình yên');
+/*!40000 ALTER TABLE `resources` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `roles` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` enum('ADMIN','SHIPPER','USER') DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.roles: ~3 rows (approximately)
-INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
-	(1, 'USER', '2024-11-15 16:18:44', '2024-11-15 16:18:44'),
-	(2, 'ADMIN', '2024-11-15 16:18:44', '2024-11-15 16:18:44'),
-	(3, 'SHIPPER', '2024-11-15 16:18:44', '2024-11-15 16:18:44');
+--
+-- Dumping data for table `roles`
+--
 
--- Dumping structure for table music-player.songs
-CREATE TABLE IF NOT EXISTS `songs` (
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'USER','2024-11-15 16:18:44','2024-11-15 16:18:44'),(2,'ADMIN','2024-11-15 16:18:44','2024-11-15 16:18:44'),(3,'SHIPPER','2024-11-15 16:18:44','2024-11-15 16:18:44');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `songs`
+--
+
+DROP TABLE IF EXISTS `songs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `songs` (
   `artist_id` bigint DEFAULT NULL,
   `cover_id` bigint DEFAULT NULL,
   `created_at` datetime(6) DEFAULT NULL,
@@ -244,22 +365,27 @@ CREATE TABLE IF NOT EXISTS `songs` (
   CONSTRAINT `FKdjq2ujqovw5rc14q60f8p6b6e` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`id`),
   CONSTRAINT `FKte4gkb2cqtk2erfa87oopj2cj` FOREIGN KEY (`album_id`) REFERENCES `albums` (`id`),
   CONSTRAINT `FKtpf47kri109fymdhe28ojruvc` FOREIGN KEY (`source_id`) REFERENCES `resources` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.songs: ~9 rows (approximately)
-INSERT INTO `songs` (`artist_id`, `cover_id`, `created_at`, `genre_id`, `id`, `source_id`, `updated_at`, `title`, `is_premium`, `views`, `album_id`) VALUES
-	(2, 117, '2024-12-05 23:07:48.000000', 25, 1, 105, NULL, 'Những lời hứa bỏ quên', b'1', 00000000000000000000000000000000000000, NULL),
-	(2, 115, '2024-12-05 23:07:47.000000', 22, 2, 104, NULL, 'Nếu những tiêc nuối', b'0', 00000000000000000000000000000000000000, NULL),
-	(1, 120, '2024-12-05 23:13:30.000000', 22, 1113, 112, NULL, 'Mang tiền về cho mẹ ', b'0', 00000000000000000000000000000000000000, NULL),
-	(1, 119, '2024-12-05 23:13:47.000000', 25, 1114, 110, NULL, 'Lối nhỏ', b'0', 00000000000000000000000000000000000000, NULL),
-	(8, 121, '2024-12-05 23:14:03.000000', 25, 1115, 108, NULL, 'Chăm hoa', b'0', 00000000000000000000000000000000000000, NULL),
-	(6, 107, '2024-12-05 23:14:14.000000', 22, 1116, 107, NULL, 'THERE’S NO ONE AT ALL', b'0', 00000000000000000000000000000000000000, NULL),
-	(4, 116, '2024-12-05 23:14:41.000000', 21, 1117, 113, NULL, 'Tết đong đầy', b'0', 00000000000000000000000000000000000000, NULL),
-	(5, 122, '2024-12-05 23:14:41.000000', 22, 1118, 111, NULL, 'Bạn đời', b'0', 00000000000000000000000000000000000000, NULL),
-	(7, 124, '2024-12-05 23:15:03.000000', 25, 1119, 109, NULL, 'Thiên lý ơi', b'0', 00000000000000000000000000000000000000, NULL);
+--
+-- Dumping data for table `songs`
+--
 
--- Dumping structure for table music-player.users
-CREATE TABLE IF NOT EXISTS `users` (
+LOCK TABLES `songs` WRITE;
+/*!40000 ALTER TABLE `songs` DISABLE KEYS */;
+INSERT INTO `songs` VALUES (2,117,'2024-12-05 23:07:48.000000',25,1,105,'2025-01-04 11:54:14.511004','Những lời hứa bỏ quên',_binary '',00000000000000000000000000000000000068,NULL),(2,115,'2024-12-05 23:07:47.000000',22,2,104,'2025-01-04 09:09:25.459084','Nếu những tiêc nuối',_binary '\0',00000000000000000000000000000000000035,NULL),(1,120,'2024-12-05 23:13:30.000000',22,1113,112,'2025-01-04 00:29:31.722555','Mang tiền về cho mẹ ',_binary '\0',00000000000000000000000000000000000006,NULL),(1,119,'2024-12-05 23:13:47.000000',25,1114,110,'2025-01-04 00:30:44.430147','Lối nhỏ',_binary '\0',00000000000000000000000000000000000004,NULL),(8,121,'2024-12-05 23:14:03.000000',25,1115,108,'2024-12-28 08:49:51.698034','Chăm hoa',_binary '\0',00000000000000000000000000000000000055,NULL),(6,107,'2024-12-05 23:14:14.000000',22,1116,107,'2024-12-27 05:50:43.000000','THERE’S NO ONE AT ALL',_binary '\0',00000000000000000000000000000000000000,NULL),(4,116,'2024-12-05 23:14:41.000000',21,1117,113,'2024-12-27 05:50:46.000000','Tết đong đầy',_binary '\0',00000000000000000000000000000000000000,NULL),(5,122,'2024-12-05 23:14:41.000000',22,1118,111,'2024-12-27 05:50:48.000000','Bạn đời',_binary '\0',00000000000000000000000000000000000000,NULL),(7,124,'2024-12-05 23:15:03.000000',25,1119,109,'2024-12-27 05:50:50.000000','Thiên lý ơi',_binary '\0',00000000000000000000000000000000000000,NULL),(2,140,'2025-01-03 19:10:01.000000',22,1120,133,'2025-01-04 00:46:03.782817','Những chuyến bay',_binary '\0',00000000000000000000000000000000000003,1),(2,139,'2025-01-03 19:11:39.000000',22,1121,134,'2025-01-04 09:10:52.554910','Ngồi Chờ Trong Vấn Vương',_binary '\0',00000000000000000000000000000000000005,1),(2,138,'2025-01-03 19:11:39.000000',22,1122,135,'2025-01-04 00:12:24.675304','Mùa mưa ấy',_binary '\0',00000000000000000000000000000000000003,1),(2,137,'2025-01-03 19:11:39.000000',22,1123,136,'2025-01-04 08:15:53.286798','Mây khóc vì điều gì',_binary '\0',00000000000000000000000000000000000003,1),(2,141,'2025-01-03 19:11:39.000000',22,1124,144,'2025-01-04 08:24:58.751685','Và em sẽ luôn là người tôi yêu nhất',_binary '\0',00000000000000000000000000000000000006,1),(2,142,'2025-01-03 19:11:39.000000',22,1125,143,'2025-01-04 00:29:12.903862','Dành hết xuân thì để chờ nhau',_binary '\0',00000000000000000000000000000000000003,1),(2,147,'2025-01-03 19:41:41.000000',22,1126,148,'2025-01-04 00:29:15.367338','Bình yên',_binary '\0',00000000000000000000000000000000000002,1),(2,146,'2025-01-03 19:41:41.000000',22,1127,145,'2025-01-04 11:47:33.903631','Không yêu em thì yêu ai',_binary '\0',00000000000000000000000000000000000002,1);
+/*!40000 ALTER TABLE `songs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
   `verified` bit(1) NOT NULL,
   `id` bigint NOT NULL AUTO_INCREMENT,
   `role_id` bigint DEFAULT NULL,
@@ -268,22 +394,35 @@ CREATE TABLE IF NOT EXISTS `users` (
   `full_name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `is_premium` bit(1) NOT NULL DEFAULT b'0',
-  `birth_day` date DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `sex` bit(1) NOT NULL,
   `created_at` datetime(6) DEFAULT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `birth_day` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKp56c1712k691lhsyewcssf40f` (`role_id`),
   CONSTRAINT `FKp56c1712k691lhsyewcssf40f` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Dumping data for table music-player.users: ~1 rows (approximately)
-INSERT INTO `users` (`verified`, `id`, `role_id`, `auth_type`, `email`, `full_name`, `password`, `is_premium`, `birth_day`, `phone_number`, `sex`, `created_at`, `updated_at`) VALUES
-	(b'1', 1, 1, 'username_password', 'ducvui2003@gmail.com', 'Lê Anh Đức', '$2a$10$ZjCmdQgwHTN45hmZ4h2cseaGHlI6D19IuxzZ8Y4RFCR72UmNRi7wm', b'1', '2024-11-05', '0865677047', b'1', '2024-11-15 23:15:22.000000', '2024-11-15 23:15:49.000000');
+--
+-- Dumping data for table `users`
+--
 
-/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (_binary '',1,1,'username_password','ducvui2003@gmail.com','Lê Anh Đức','$2a$10$ZjCmdQgwHTN45hmZ4h2cseaGHlI6D19IuxzZ8Y4RFCR72UmNRi7wm',_binary '','0865677047',_binary '','2024-11-15 23:15:22.000000','2024-11-15 23:15:49.000000','2024-11-05',NULL),(_binary '',17,1,'username_password','kiminonawa1305@gmail.com','Nguyễn Đình Lam','$2a$10$BYN4U05PEk2ew.w4TMkiU.CbM1/3NjzNLHtho8HBFeScyYyGHQH8K',_binary '\0','0855354919',_binary '','2024-12-21 04:02:38.626401','2024-12-21 04:02:38.626428','2003-05-13',NULL),(_binary '',18,1,'username_password','ndlam.dev@gmail.com','Nguyễn Đình Lam','$2a$10$PgUhdmYc0.PzTx/XZW56uuT46XjYErDMMSLboO2DKwvFR0yqoKSCC',_binary '\0','0855354919',_binary '','2025-01-04 08:54:45.268295','2025-01-04 08:54:45.268314','2003-05-13',NULL);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-01-04 19:00:47
