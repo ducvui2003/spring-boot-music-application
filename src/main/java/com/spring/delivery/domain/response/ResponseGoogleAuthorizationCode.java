@@ -10,8 +10,9 @@ package com.spring.delivery.domain.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record ResponseGoogleAuthorizationCode(
-		@JsonProperty("access_token") String accessToken,
-		String scope,
-		@JsonProperty("token_type") String tokenType,
-		@JsonProperty("id_token") String idToken,
-		@JsonProperty("expires_in") Long expiresIn) {}
+        @JsonProperty("access_token") String accessToken,
+        String scope,
+        @JsonProperty("token_type") String tokenType,
+        @JsonProperty("id_token") String idToken,
+        @JsonProperty("expires_in") Long expiresIn) {
+}

@@ -10,7 +10,7 @@ package com.spring.delivery.service.authentication;
 import com.spring.delivery.domain.response.UserInfoGoogle;
 
 public interface GoogleAuthService {
-	UserInfoGoogle getProfileByAuthCode(String authCode);
+    UserInfoGoogle getProfileByAuthCode(String authCode);
 
-	UserInfoGoogle getProfileByAccessToken(String accessToken);
+    UserInfoGoogle getProfileByAccessToken(String accessToken);
 }

@@ -12,4 +12,6 @@ public interface ArtistService {
     ApiPaging<ResponseArtistCard> getArtistCard(Pageable pageable);
 
     List<String> getAllArtistName();
+
+    List<ResponseArtistCard> findByName(String name);
 }

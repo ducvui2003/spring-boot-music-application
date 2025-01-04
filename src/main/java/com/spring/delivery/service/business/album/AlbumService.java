@@ -13,4 +13,6 @@ public interface AlbumService {
     List<String> getAllAlbumName();
 
     ResponseAlbumDetail getDetail(Long id, Pageable pageable);
+
+    List<ResponseAlbumCard> search(String name);
 }

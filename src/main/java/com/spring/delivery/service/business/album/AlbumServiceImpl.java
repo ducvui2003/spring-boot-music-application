@@ -21,6 +21,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,6 +75,21 @@ public class AlbumServiceImpl implements AlbumService {
                 .totalItems(songs.size())
                 .build());
         return response;
+    }
+
+    @Override
+    public List<ResponseAlbumCard> search(String name) {
+        var result = albumRepository.findAllByNameLike("%" + name + "%").stream().map(it -> {
+            ResponseAlbumCard response = albumMapper.toResponseAlbumCard(it);
+            response.setCoverUrl(getCoverAlbum(it));
+            return response;
+        }).collect(Collectors.toCollection(ArrayList::new));
+        result.addAll(albumRepository.findAllByArtist_NameLike("%" + name + "%").stream().map(it -> {
+            ResponseAlbumCard response = albumMapper.toResponseAlbumCard(it);
+            response.setCoverUrl(getCoverAlbum(it));
+            return response;
+        }).toList());
+        return result;
     }
 
     private String getCoverAlbum(Album album) {

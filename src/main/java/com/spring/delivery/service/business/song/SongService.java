@@ -31,4 +31,6 @@ public interface SongService {
     List<ResponseSongCard> getSongHistory(Long userId);
 
     boolean deleteSong(Long id);
+
+    List<ResponseSongCard> search(String name);
 }

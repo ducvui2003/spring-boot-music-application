@@ -13,9 +13,9 @@ import com.spring.delivery.util.enums.RedisNameSpace;
 import java.util.Optional;
 
 public interface OTPService {
-	void verifyOTP(RedisNameSpace nameSpace, String email, String otp);
+    void verifyOTP(RedisNameSpace nameSpace, String email, String otp);
 
-	String createOTP(RedisNameSpace nameSpace, String email);
+    String createOTP(RedisNameSpace nameSpace, String email);
 
-	Optional<String> getOtp(RedisNameSpace redisNameSpace, String email);
+    Optional<String> getOtp(RedisNameSpace redisNameSpace, String email);
 }

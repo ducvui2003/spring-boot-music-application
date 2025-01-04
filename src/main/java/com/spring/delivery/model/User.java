@@ -8,10 +8,8 @@ import com.spring.delivery.util.enums.converter.AuthTypeConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -63,4 +61,7 @@ public class User extends BaseModel {
 
     @Enumerated(EnumType.STRING)
     RoleEnum role;
+
+    @OneToMany(mappedBy = "user")
+    Set<Favorite> favorites;
 }
