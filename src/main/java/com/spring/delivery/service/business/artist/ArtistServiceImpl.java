@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,11 @@ public class ArtistServiceImpl implements ArtistService {
         Page<Artist> page = artistRepository.findTopArtists(pageable);
         pageableUtil.checkNoEmpty(page);
         return pageableUtil.handlePaging(page, this::toArtistCardResponse);
+    }
+
+    @Override
+    public List<ResponseArtistCard> findByName(String name) {
+        return artistRepository.findAllByNameLike("%" + name + "%").stream().map(this::toArtistCardResponse).toList();
     }
 
     private ResponseArtistCard toArtistCardResponse(Artist artist) {

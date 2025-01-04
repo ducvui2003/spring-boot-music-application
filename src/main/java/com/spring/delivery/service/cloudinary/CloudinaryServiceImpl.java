@@ -3,8 +3,6 @@ package com.spring.delivery.service.cloudinary;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
-import com.spring.delivery.domain.request.RequestCreateResource;
-import com.spring.delivery.domain.response.ResponseCloudinaryUpload;
 import com.spring.delivery.domain.response.ResponseSignature;
 import com.spring.delivery.util.enums.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map;
 
 @Slf4j

@@ -16,7 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "songs")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Song extends BaseModel {
+public class Song extends BaseModel implements Comparable<Song> {
     String title;
     @ManyToOne
     @JoinColumn(name = "genre_id")
@@ -33,8 +33,8 @@ public class Song extends BaseModel {
     @ManyToMany(mappedBy = "songs")
     Set<Playlist> playlists;
 
-    @ManyToMany(mappedBy = "songs")
-    Set<User> users;
+    @OneToMany(mappedBy = "song")
+    Set<Favorite> favorites;
 
     @OneToMany(mappedBy = "song")
     Set<ListeningHistory> listeningHistories;
@@ -45,4 +45,9 @@ public class Song extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "album_id")
     Album album;
+
+    @Override
+    public int compareTo(Song song) {
+        return Long.compare(this.getId(), song.getId());
+    }
 }

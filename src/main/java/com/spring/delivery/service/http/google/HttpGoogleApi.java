@@ -7,14 +7,13 @@
  **/
 package com.spring.delivery.service.http.google;
 
+import com.spring.delivery.domain.response.UserInfoGoogle;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import com.spring.delivery.domain.response.UserInfoGoogle;
-
 @FeignClient(name = "login-google-service", url = "https://www.googleapis.com/oauth2/v3")
 public interface HttpGoogleApi {
-	@PostMapping(value = "/userinfo")
-	UserInfoGoogle getUserInfo(@RequestHeader("Authorization") String accessToken);
+    @PostMapping(value = "/userinfo")
+    UserInfoGoogle getUserInfo(@RequestHeader("Authorization") String accessToken);
 }

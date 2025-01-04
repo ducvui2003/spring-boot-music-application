@@ -1,26 +1,24 @@
 package com.spring.delivery.controller;
 
-import com.spring.delivery.domain.ApiPaging;
-import com.spring.delivery.domain.response.*;
+import com.spring.delivery.domain.response.ResponseAlbumCard;
+import com.spring.delivery.domain.response.ResponseAuthentication;
+import com.spring.delivery.domain.response.ResponsePlaylistCard;
+import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.service.business.album.AlbumService;
-import com.spring.delivery.service.business.artist.ArtistService;
 import com.spring.delivery.service.business.playlist.PlaylistService;
 import com.spring.delivery.service.business.song.SongService;
 import com.spring.delivery.util.SecurityUtil;
 import com.spring.delivery.util.exception.AppErrorCode;
 import com.spring.delivery.util.exception.AppException;
-import feign.Response;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

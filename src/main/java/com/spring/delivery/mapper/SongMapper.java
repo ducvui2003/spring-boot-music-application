@@ -2,11 +2,9 @@ package com.spring.delivery.mapper;
 
 import com.spring.delivery.domain.response.ResponseSong;
 import com.spring.delivery.domain.response.ResponseSongCard;
-import com.spring.delivery.model.Resource;
 import com.spring.delivery.model.Song;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface SongMapper {
