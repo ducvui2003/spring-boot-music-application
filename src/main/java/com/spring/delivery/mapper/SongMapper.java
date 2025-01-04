@@ -17,6 +17,7 @@ public interface SongMapper {
     ResponseSong toSongResponse(Song song);
 
     @Mapping(target = "artist", source = "artist.name")
+    @Mapping(target = "genre", source = "genre.name")
     @Mapping(target = "title", source = "title")
     @Mapping(target = "cover", ignore = true)
     ResponseSongCard toSongCardResponse(Song song);

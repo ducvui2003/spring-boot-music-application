@@ -33,4 +33,6 @@ public interface SongService {
     boolean deleteSong(Long id);
 
     List<ResponseSongCard> search(String name);
+
+    ApiPaging<ResponseSongCard> getSongs(Pageable pageable);
 }

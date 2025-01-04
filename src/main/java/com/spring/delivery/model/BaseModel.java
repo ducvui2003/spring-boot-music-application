@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
@@ -25,9 +25,9 @@ public class BaseModel {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    Instant createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    Instant updatedAt;
+    LocalDateTime updatedAt;
 }

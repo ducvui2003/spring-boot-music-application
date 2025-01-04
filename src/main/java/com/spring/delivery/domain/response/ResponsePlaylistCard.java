@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PROTECTED)
@@ -26,6 +27,6 @@ public class ResponsePlaylistCard {
     String description;
     String coverUrl;
     Integer totalSong;
-    Instant createdAt;
-    Instant updatedAt;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

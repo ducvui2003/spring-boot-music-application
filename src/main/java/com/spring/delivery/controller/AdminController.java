@@ -1,16 +1,23 @@
 package com.spring.delivery.controller;
 
+import com.spring.delivery.domain.ApiPaging;
 import com.spring.delivery.domain.request.RequestCreateSong;
+import com.spring.delivery.domain.request.RequestSearch;
 import com.spring.delivery.domain.request.RequestUpdateSong;
+import com.spring.delivery.domain.response.ResponseSearch;
 import com.spring.delivery.domain.response.ResponseSong;
+import com.spring.delivery.domain.response.ResponseSongCard;
 import com.spring.delivery.service.business.album.AlbumService;
 import com.spring.delivery.service.business.artist.ArtistService;
 import com.spring.delivery.service.business.genre.GenreService;
 import com.spring.delivery.service.business.song.SongService;
+import com.spring.delivery.util.anotation.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +40,7 @@ public class AdminController {
     public ResponseEntity<Void> createSong(
             @RequestParam("title") String title,
             @RequestParam("artist") String artist,
-            @RequestParam("album") String album,
+            @RequestParam(value = "album", required = false) String album,
             @RequestParam("genre") String genre,
             @RequestParam("file_cover") MultipartFile fileCover,
             @RequestParam("file_source") MultipartFile fileSource
@@ -79,5 +86,11 @@ public class AdminController {
     @GetMapping("/genre")
     public ResponseEntity<List<String>> getAllGenre() {
         return ResponseEntity.ok(genreService.getGenreName());
+    }
+
+    @GetMapping()
+    @ApiMessage("Get success")
+    public ResponseEntity<ApiPaging<ResponseSongCard>> getSongs(@PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(songService.getSongs(pageable));
     }
 }
