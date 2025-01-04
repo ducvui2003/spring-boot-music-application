@@ -27,8 +27,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -76,5 +78,10 @@ public class GenreServiceImpl implements GenreService {
             response.setCover(cover);
         }
         return response;
+    }
+
+    @Override
+    public List<String> getGenreName() {
+        return genreRepository.findAll().stream().map(Genre::getName).collect(Collectors.toList());
     }
 }

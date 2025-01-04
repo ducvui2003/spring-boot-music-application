@@ -73,15 +73,4 @@ public class SongController {
         songService.unlikeSong(id);
         return ResponseEntity.ok().build();
     }
-
-    @PostMapping("/create")
-    public ResponseEntity<ResponseSong> createSong(@Valid @RequestBody RequestCreateSong request) {
-        return ResponseEntity.ok().body(songService.createSong(request));
-    }
-
-    @PostMapping("/update/{id}")
-    public ResponseEntity<ResponseSong> updateSong(@PathVariable("id") Long id, @Valid @RequestBody RequestUpdateSong request) {
-        return ResponseEntity.ok().body(songService.updateSong(id, request));
-    }
-
 }

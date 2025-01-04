@@ -24,11 +24,13 @@ public interface SongService {
 
     void unlikeSong(Long id);
 
-    ResponseSong createSong(RequestCreateSong request);
+    void createSong(RequestCreateSong request);
 
     ResponseSong updateSong(Long id, RequestUpdateSong request);
 
     List<ResponseSongCard> getSongHistory(Long userId);
+
+    boolean deleteSong(Long id);
 
     List<ResponseSongCard> search(String name);
 }

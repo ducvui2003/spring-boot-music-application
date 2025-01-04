@@ -54,24 +54,22 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
-    // https://mvnrepository.com/artifact/com.google.api-client/google-api-client
     implementation("com.google.api-client:google-api-client:2.6.0")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation("com.google.firebase:firebase-admin:9.3.0")
-    // https://mvnrepository.com/artifact/com.googlecode.libphonenumber/libphonenumber
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.12.56")
-
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
-
-    implementation("org.bytedeco:javacv-platform:1.5.10")
 
     implementation("com.cloudinary:cloudinary-http44:1.39.0")
 
     implementation("com.brevo:brevo:1.0.0")
 }
+
+tasks.bootJar {
+    // Ensure resources are included in the bootJar task
+    from("src/main/resources") // This should already be included, but just in case
+}
+
+
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")

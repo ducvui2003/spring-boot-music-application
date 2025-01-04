@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Component("userDetailsService")
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class UserDetailsCustom implements UserDetailsService {
         if (user == null) throw new AppException(AppErrorCode.USER_NOT_FOUND);
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getName().name()));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

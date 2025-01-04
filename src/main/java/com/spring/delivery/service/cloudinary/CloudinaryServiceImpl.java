@@ -10,9 +10,16 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -59,5 +66,28 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                 .type("upload")
                 .publicId(publicId)
                 .build();
+    }
+
+    @Async
+    @Override
+    public CompletableFuture<ResponseCloudinaryUpload> upload(MultipartFile file, Tag tag) {
+        try {
+            InputStream inputStream = file.getInputStream();
+            String folder = rootFolder + "/" + tag.getName();
+            Map<String, Object> response = cloudinary.uploader().uploadLarge(inputStream, ObjectUtils.asMap(
+                    "resource_type", "auto",
+                    "tags", tag.name(),
+                    "folder", folder));
+            if (response.containsKey("error"))
+                return CompletableFuture.completedFuture(null);
+
+            ResponseCloudinaryUpload result = new ResponseCloudinaryUpload();
+            result.setPublicId(response.get("public_id").toString());
+            result.setResourceType(response.get("resource_type").toString());
+            result.setCreatedAt(LocalDateTime.parse(response.get("created_at").toString(), DateTimeFormatter.ISO_DATE_TIME));
+            return CompletableFuture.completedFuture(result);
+        } catch (IOException e) {
+            return CompletableFuture.completedFuture(null);
+        }
     }
 }

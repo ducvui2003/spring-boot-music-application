@@ -4,9 +4,7 @@ import com.spring.delivery.domain.request.RequestRegister;
 import com.spring.delivery.domain.response.ResponseAuthentication;
 import com.spring.delivery.mapper.UserMapper;
 import com.spring.delivery.model.JwtPayload;
-import com.spring.delivery.model.Role;
 import com.spring.delivery.model.User;
-import com.spring.delivery.repository.RoleRepository;
 import com.spring.delivery.repository.UserRepository;
 import com.spring.delivery.service.token.TokenService;
 import com.spring.delivery.util.SecurityUtil;
@@ -32,7 +30,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     TokenService tokenService;
     UserMapper userMapper = UserMapper.INSTANCE;
     SecurityUtil securityUtil;
-    RoleRepository roleRepository;
     VerifyService verifyService;
 
     @Override
@@ -45,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setVerified(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAuthType(AuthType.USERNAME_PASSWORD);
-        user.setRole(roleRepository.findByName(RoleEnum.USER));
+        user.setRole(RoleEnum.USER);
         verifyService.sendOtp(user.getEmail());
         userRepository.save(user);
     }
@@ -117,12 +114,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String email = oAuth2User.getAttribute("email");
         if (userRepository.existsByEmail(email)) return;
 
-        Role roleUser = roleRepository.findByName(RoleEnum.USER);
         User user = User.builder()
                 .email(email)
                 .fullName(oAuth2User.getAttribute("name"))
                 .verified(true)
-                .role(roleUser)
+                .role(RoleEnum.USER)
                 .authType(AuthType.OAUTH2)
                 .build();
         userRepository.save(user);
@@ -132,7 +128,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return JwtPayload.builder()
                 .email(user.getEmail())
                 .user(userMapper.toUserPayload(user))
-                .role(user.getRole().getName().name())
+                .role(user.getRole().name())
                 .timeExpiredPlus(1)
                 .build();
     }

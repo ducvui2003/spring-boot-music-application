@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.math.BigInteger;
 import java.util.Set;
@@ -40,11 +42,14 @@ public class Song extends BaseModel implements Comparable<Song> {
     Set<ListeningHistory> listeningHistories;
 
     @ColumnDefault("false")
-    boolean isPremium;
+    boolean isPremium = Boolean.FALSE;
 
     @ManyToOne
     @JoinColumn(name = "album_id")
     Album album;
+
+    @ColumnDefault("false")
+    boolean deleted = Boolean.FALSE;
 
     @Override
     public int compareTo(Song song) {

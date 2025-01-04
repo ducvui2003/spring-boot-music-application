@@ -30,6 +30,8 @@ public enum AppErrorCode {
     USER_ALREADY_PREMIUM(HttpServletResponse.SC_BAD_REQUEST, "User has premium"),
     NOT_FOUND(HttpServletResponse.SC_NOT_FOUND, "Not found"),
     FORBIDDEN(HttpServletResponse.SC_FORBIDDEN, "Forbidden"),
+    SONG_CREATION_FAILED(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Song creation failed"),
+    SONG_EXISTED(HttpServletResponse.SC_CONFLICT, "Song is already used"),
     ;
 
     private int code;
