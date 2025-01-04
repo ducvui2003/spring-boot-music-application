@@ -13,25 +13,25 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
 public class MyPhoneNumberUtil {
-	public static boolean isPhoneNumberValid(String region, String phoneNumber)  {
-		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phone = null;
-		try {
-			phone = phoneUtil.parse(phoneNumber, region);
-		} catch (NumberParseException e) {
-			throw new RuntimeException(e);
-		}
-		return phoneUtil.isValidNumber(phone);
-	}
+    public static boolean isPhoneNumberValid(String region, String phoneNumber) {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        Phonenumber.PhoneNumber phone = null;
+        try {
+            phone = phoneUtil.parse(phoneNumber, region);
+        } catch (NumberParseException e) {
+            throw new RuntimeException(e);
+        }
+        return phoneUtil.isValidNumber(phone);
+    }
 
-	public static String formatPhoneNumber(String region, String phoneNumber) {
-		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phone = null;
-		try {
-			phone = phoneUtil.parse(phoneNumber, region);
-		} catch (NumberParseException e) {
-			throw new RuntimeException(e);
-		}
-		return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
-	}
+    public static String formatPhoneNumber(String region, String phoneNumber) {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        Phonenumber.PhoneNumber phone = null;
+        try {
+            phone = phoneUtil.parse(phoneNumber, region);
+        } catch (NumberParseException e) {
+            throw new RuntimeException(e);
+        }
+        return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
+    }
 }

@@ -19,10 +19,10 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RequestPhoneHeaderInterceptor implements HandlerInterceptor {
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable Object handler) {
-		Optional<String> phoneOptional = Optional.ofNullable(request.getHeader(RequestHeader.PHONE_NUMBER.getName()));
-		if (phoneOptional.isEmpty()) throw new AppException(AppErrorCode.HEADER_MISSING);
-		return true;
-	}
+    @Override
+    public boolean preHandle(HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable Object handler) {
+        Optional<String> phoneOptional = Optional.ofNullable(request.getHeader(RequestHeader.PHONE_NUMBER.getName()));
+        if (phoneOptional.isEmpty()) throw new AppException(AppErrorCode.HEADER_MISSING);
+        return true;
+    }
 }

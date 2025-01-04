@@ -1,5 +1,9 @@
 package com.spring.delivery.util.advice;
 
+import com.spring.delivery.domain.ApiResponse;
+import com.spring.delivery.util.anotation.ApiMessage;
+import jakarta.annotation.Nullable;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -8,12 +12,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import com.spring.delivery.domain.ApiResponse;
-import com.spring.delivery.util.anotation.ApiMessage;
-
-import jakarta.annotation.Nullable;
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestControllerAdvice
 public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
@@ -34,7 +32,8 @@ public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
             @Nullable ServerHttpResponse response) {
 
         String path = request.getURI().getPath();
-        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/graphiql")) return body;
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/graphiql"))
+            return body;
 
         HttpServletResponse httpServletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int statusCode = httpServletResponse.getStatus();

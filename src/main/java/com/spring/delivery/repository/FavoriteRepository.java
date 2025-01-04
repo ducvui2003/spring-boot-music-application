@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
-    Optional<Favorite> findByIdAndUser_Id(long id, long userId);
+    Optional<Favorite> findBySong_IdAndUser_Id(long id, long userId);
 
     Page<Favorite> findByUser_Id(long userId, Pageable pageable);
-    
+
     List<Favorite> findByUser_Id(long userId);
 
     int countByUser_Id(long userId);

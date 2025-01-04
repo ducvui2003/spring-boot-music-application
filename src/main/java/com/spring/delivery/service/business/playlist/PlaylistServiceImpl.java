@@ -230,6 +230,25 @@ public class PlaylistServiceImpl implements PlaylistService {
         return response;
     }
 
+    @Override
+    public ApiPaging<ResponsePlaylistCard> getPlaylistHasSong(String name, long id, Pageable pageable) {
+        var user = securityUtil.getCurrentUserDTO();
+        if (user.isEmpty())
+            throw new AppException(AppErrorCode.UNAUTHORIZED);
+
+        Page<Playlist> page = playlistRepository.findByNameLikeAndUser_IdAndSongsContains(
+                "%" + name + "%",
+                user.get().id()
+                , new Song() {{
+                    setId(id);
+                }}, pageable);
+        var response = pageableUtil.handlePaging(page, playListMapper::toPlaylistCardResponse);
+
+        response.getContent().forEach(pl -> setPlaylistCoverUrl(pl, page.getContent()));
+
+        return response;
+    }
+
     private ResponseSongCard toSongResponseCard(Song song) {
         ResponseSongCard responseSong = songMapper.toSongCardResponse(song);
         String url = cloudinaryService.generateImage(song.getCover().getPublicId());

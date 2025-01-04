@@ -24,4 +24,8 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Transactional
     @Query("UPDATE Song s SET s.views = s.views + 1 WHERE s.id = :songId")
     int incrementViewCount(@Param("songId") Long songId);
+
+    List<Song> findAllByTitleLike(String name);
+
+    List<Song> findAllByArtist_NameLike(String name);
 }

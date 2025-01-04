@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -150,7 +151,7 @@ public class SongServiceImpl implements SongService {
         }
 
         ResponseSong responseSong = songMapper.toSongResponse(song);
-        responseSong.setLike(favoriteRepository.findByIdAndUser_Id(song.getId(), userDTO.id()).isPresent());
+        responseSong.setLike(favoriteRepository.findBySong_IdAndUser_Id(song.getId(), userDTO.id()).isPresent());
         if (song.getSource() != null) {
             String url = cloudinaryService.generateHLS(song.getSource().getPublicId());
             responseSong.setUrl(url);
@@ -176,6 +177,13 @@ public class SongServiceImpl implements SongService {
         List<Long> songIds = histories.stream().map(item -> item.getSong().getId()).collect(Collectors.toList());
         Set<Song> songs = songRepository.findAllByIdIn(songIds);
         return songs.stream().map(this::toSongResponseCard).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ResponseSongCard> search(String name) {
+        var result = songRepository.findAllByTitleLike("%" + name + "%").stream().map(this::toSongResponseCard).collect(Collectors.toCollection(ArrayList::new));
+        result.addAll(songRepository.findAllByArtist_NameLike("%" + name + "%").stream().map(this::toSongResponseCard).toList());
+        return result;
     }
 
     private void addSongHistory(Long userId, Song song) {

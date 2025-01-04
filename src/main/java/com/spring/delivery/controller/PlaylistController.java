@@ -6,7 +6,6 @@ import com.spring.delivery.domain.response.ResponsePlaylistCard;
 import com.spring.delivery.domain.response.ResponsePlaylistCreated;
 import com.spring.delivery.domain.response.ResponsePlaylistDetail;
 import com.spring.delivery.service.business.playlist.PlaylistService;
-import com.spring.delivery.service.business.song.SongService;
 import com.spring.delivery.util.anotation.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/playlist")
 public class PlaylistController {
     PlaylistService playlistService;
-    SongService songService;
 
     @GetMapping()
     @ApiMessage("Get success")
@@ -80,5 +78,15 @@ public class PlaylistController {
             @RequestParam("id") long id,
             @PageableDefault(sort = "id") Pageable pageable) {
         return ResponseEntity.ok().body(playlistService.getPlaylistNotHasSong(name, id, pageable));
+    }
+
+
+    @GetMapping("/playlist-to-remove-song")
+    @ApiMessage("Get success")
+    public ResponseEntity<ApiPaging<ResponsePlaylistCard>> getPlaylistHasSong(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam("id") long id,
+            @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok().body(playlistService.getPlaylistHasSong(name, id, pageable));
     }
 }

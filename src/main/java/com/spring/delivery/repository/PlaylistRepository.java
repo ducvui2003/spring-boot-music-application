@@ -15,8 +15,10 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     boolean existsByName(String name);
 
     Page<Playlist> findByUser_Id(Long id, Pageable pageable);
-    
+
     Page<Playlist> findByNameLikeAndUser_IdAndSongsNotContains(String name, Long userId, Song song, Pageable pageable);
+
+    Page<Playlist> findByNameLikeAndUser_IdAndSongsContains(String name, Long userId, Song song, Pageable pageable);
 
     Optional<Playlist> findByIdAndUser_Id(Long id, Long useId);
 

@@ -29,4 +29,6 @@ public interface SongService {
     ResponseSong updateSong(Long id, RequestUpdateSong request);
 
     List<ResponseSongCard> getSongHistory(Long userId);
+
+    List<ResponseSongCard> search(String name);
 }

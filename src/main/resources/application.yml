@@ -88,6 +88,7 @@ app:
     - /upload
     - /api/v1/filter/**
     - /api/v1/status
+    - /api/v1/search
   cookie:
     key:
       refreshToken: refresh_token
