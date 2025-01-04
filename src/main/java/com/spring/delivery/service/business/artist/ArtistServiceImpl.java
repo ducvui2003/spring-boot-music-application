@@ -14,6 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +45,10 @@ public class ArtistServiceImpl implements ArtistService {
             responseArtistCard.setAvatar(url);
         }
         return responseArtistCard;
+    }
+
+    @Override
+    public List<String> getAllArtistName() {
+        return artistRepository.findAll().stream().map(Artist::getName).collect(Collectors.toList());
     }
 }

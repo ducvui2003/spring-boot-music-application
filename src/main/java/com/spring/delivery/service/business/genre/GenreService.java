@@ -12,6 +12,8 @@ import com.spring.delivery.domain.response.ResponseGenre;
 import com.spring.delivery.domain.response.ResponseSongCard;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 
 public interface GenreService {
     ApiPaging<ResponseGenre> getGenres(Pageable pageable);
@@ -20,4 +22,5 @@ public interface GenreService {
 
     ApiPaging<ResponseSongCard> getSongs(Pageable pageable);
 
+    List<String> getGenreName();
 }

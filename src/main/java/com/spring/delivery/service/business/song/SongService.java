@@ -24,7 +24,7 @@ public interface SongService {
 
     void unlikeSong(Long id);
 
-    ResponseSong createSong(RequestCreateSong request);
+    void createSong(RequestCreateSong request);
 
     ResponseSong updateSong(Long id, RequestUpdateSong request);
 

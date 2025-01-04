@@ -16,7 +16,7 @@ public class UserTask {
 	RedisService<String> redisService;
 
 	//    Mỗi 6 tiếng chạy 1 lần
-	@Scheduled(cron = "0 0 */6 * * *")
+//	@Scheduled(cron = "0 0 */6 * * *")
 	public void deleteUserNotVerified() {
 		log.info("Cron job delete user is not verified started at: {}", System.currentTimeMillis());
 		//        Xóa user chưa xác thực trong mysql
