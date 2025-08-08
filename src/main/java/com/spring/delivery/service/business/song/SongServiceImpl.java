@@ -131,7 +131,7 @@ public class SongServiceImpl implements SongService {
         Artist artist = artistRepository.findByName(request.getArtist()).orElseThrow(() -> new AppException("Artist not found"));
         song.setArtist(artist);
 
-        if (!request.getAlbum().isBlank()) {
+        if (request.getAlbum() != null && request.getAlbum().isBlank()) {
             Album album = albumRepository.findByName(request.getAlbum()).orElseThrow(() -> new AppException("Album not found"));
             artist.setAlbums(Set.of(album));
         }
@@ -141,7 +141,7 @@ public class SongServiceImpl implements SongService {
         }
 
         CompletableFuture<ResponseCloudinaryUpload> audioUpload = cloudinaryService.upload(request.getFileSource(), Tag.AUDIO);
-        CompletableFuture<ResponseCloudinaryUpload> coverUpload = cloudinaryService.upload(request.getFileSource(), Tag.SONG);
+        CompletableFuture<ResponseCloudinaryUpload> coverUpload = cloudinaryService.upload(request.getFileCover(), Tag.SONG);
         CompletableFuture.allOf(audioUpload, coverUpload).join();
 
         try {
@@ -167,6 +167,7 @@ public class SongServiceImpl implements SongService {
             e.printStackTrace();
             throw new AppException(AppErrorCode.SONG_CREATION_FAILED);
         }
+        song.setViews(new BigInteger(String.valueOf(0)));
         songRepository.save(song);
     }
 
@@ -179,7 +180,7 @@ public class SongServiceImpl implements SongService {
     public ResponseSong updateSong(Long id, RequestUpdateSong request) {
         Song song = songRepository.findById(id).orElseThrow(() -> new AppException("Song not found"));
         song.setTitle(request.title());
-        song.setAlbum(albumRepository.findByName(request.album()).orElseThrow(() -> new AppException("Album not found")));
+//        song.setAlbum(albumRepository.findByName(request.album()).orElseThrow(() -> new AppException("Album not found")));
         song.setArtist(artistRepository.findByName(request.artist()).orElseThrow(() -> new AppException("Artist not found")));
         song.setGenre(genreRepository.findByName(request.genre()).orElseThrow(() -> new AppException("Genre not found")));
         song.setCover(resourceRepository.findById(request.coverId()).orElseThrow(() -> new AppException("Resource not found")));
@@ -226,6 +227,10 @@ public class SongServiceImpl implements SongService {
         var result = songRepository.findAllByTitleLike("%" + name + "%").stream().map(this::toSongResponseCard).collect(Collectors.toCollection(ArrayList::new));
         result.addAll(songRepository.findAllByArtist_NameLike("%" + name + "%").stream().map(this::toSongResponseCard).toList());
         return result;
+    }
+
+    public ApiPaging<ResponseSongCard> getSongs(Pageable pageable) {
+        return pageableUtil.handlePaging(songRepository.findAll(pageable), this::toSongResponseCard);
     }
 
     private void addSongHistory(Long userId, Song song) {

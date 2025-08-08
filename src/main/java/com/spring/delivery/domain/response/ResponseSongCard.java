@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
 @Data
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -15,4 +18,8 @@ public class ResponseSongCard {
     String cover;
     String title;
     String artist;
+    String genre;
+    BigInteger views;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }
